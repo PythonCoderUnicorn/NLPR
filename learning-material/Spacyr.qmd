@@ -1,0 +1,10 @@
+
+
+# NLP in R
+
+Using the SpacyR library, this tutorial is from [Wouter van Atteveldt & Kasper Welbers, (2019-04)](https://github.com/ccs-amsterdam/r-course-material/blob/master/tutorials/r_text_nlp.md)
+
+
+Main parts of NLP are tokenization, lemming and POS (parts of speech).
+
+
