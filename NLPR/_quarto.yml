@@ -1,0 +1,23 @@
+project:
+  type: book
+
+book:
+  title: "NLPR"
+  author: "Zane Dax (She/They)"
+  date: "2022-09-12"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: slate
+  pdf:
+    documentclass: scrreprt
+
+
+
