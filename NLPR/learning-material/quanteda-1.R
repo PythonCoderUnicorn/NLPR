@@ -474,6 +474,117 @@ g + aes(color= keyword)+
 
 # frequency plots !
 
+library(quanteda.textstats)
+
+features_inaug_dfm = textstat_frequency(inaug_dfm, n= 50)
+# sort by reverse freq order
+features_inaug_dfm$feature = with(features_inaug_dfm, reorder(feature, -frequency))
+
+ggplot(
+  features_inaug_dfm,
+  aes(x= feature, y= frequency)
+)+
+  geom_point()+
+  ggdark::dark_mode() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+# compare frequency of single term across different texts 
+inaug_subset = corpus_subset(data_corpus_inaugural)
+
+freq_grouped_inaug = textstat_frequency(
+  dfm( tokens(inaug_subset)),
+  groups = inaug_subset$President
+)
+
+# filter for term
+freq_term = subset( freq_grouped_inaug, freq_grouped_inaug$feature %in% 'american')
+
+ggplot(
+  freq_term,
+  aes(x= group, y= frequency, col= frequency)
+)+
+  geom_point(size=3)+
+  ggdark::dark_mode()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  labs(y="Frequency", 
+       title = glue::glue("Frequency of the word '{freq_term[1]}' by US Presidents Inaugural Speeches")
+       )+
+  scale_color_distiller(type = 'seq', palette = 4)
+
+  
+
+
+# for relative frequency plots (word count / length of chapter)
+# need expected word frequency per 100 words, *100
+inaug_dfm_subset = dfm(tokens(inaug_subset))
+
+dfm_rel_freq = dfm_weight( inaug_dfm_subset, scheme = 'prop') * 100
+head(dfm_rel_freq)
+
+rel_freq = textstat_frequency( dfm_rel_freq, groups = dfm_rel_freq$President)
+
+rel_freq_term = subset( rel_freq, feature %in% 'american')
+
+ggplot(
+  rel_freq_term,
+  aes(x= group, y= frequency, col= frequency)
+)+
+  geom_point(size=3)+
+  ggdark::dark_mode()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  labs(y="Relative Frequency", 
+       title = glue::glue("Frequency of the word '{freq_term[1]}' by US Presidents Inaugural Speeches")
+  )+
+  scale_color_distiller(type = 'seq', palette = 7)
+
+
+
+
+
+# plot most frequent words in terms of relative frequency by group
+
+inaug_dfm_weight = data_corpus_inaugural %>% 
+  corpus_subset(Year > 2000) %>% 
+  tokens(remove_punct = T) %>% 
+  tokens_remove(stopwords('en')) %>% 
+  dfm() %>% 
+  dfm_weight(scheme = 'prop')
+
+# calculate relative freq by president
+freq_weight = textstat_frequency(inaug_dfm_weight, 
+                   n= 10, 
+                   groups = inaug_dfm_weight$President
+                   )
+
+
+
+ggplot(
+  freq_weight,
+  aes(x= nrow(freq_weight):1, y= frequency, col= frequency)
+)+
+  geom_point(size=3)+
+  facet_wrap(~ group, scales = 'free')+
+  coord_flip()+
+  scale_x_continuous(breaks = nrow(freq_weight):1,
+                     labels = freq_weight$feature)+
+  ggdark::dark_mode()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  labs(y="Relative Frequency", x="",
+       title = glue::glue("Frequency of the word '{freq_term[1]}' by US Presidents Inaugural Speeches")
+  )+
+  scale_color_distiller(type = 'seq', palette = 7)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
