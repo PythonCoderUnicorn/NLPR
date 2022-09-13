@@ -609,16 +609,35 @@ textplot_keyness(trump_keyness,
 
 
 
+# word scores  is a scaling procedure for estimating policy positions or scores
+
+library(quanteda.textmodels)
+
+# corpus to dfm
+irishbudget_dfm = dfm(tokens(data_corpus_irishbudget2010))
+
+# set reference scores
+ref_scores = c( rep(NA, 4), 1, -1, rep(NA, 8))
+
+# predict wordscores model
+wordscore_model = textmodel_wordscores(irishbudget_dfm, y= ref_scores, smooth = 1)
+
+# plot estimated word positions
+textplot_scale1d(wordscore_model,
+                 highlighted = c('economy','budget','tax','jobs','growth'),
+                 highlighted_color = 'red'
+                 )+
+  ggdark::dark_mode()
 
 
 
+# get predictions
+irishbudget_prediction = predict( wordscore_model, se.fit = T)
 
-
-
-
-
-
-
+# plot estimated document pos and group by party variable
+textplot_scale1d(irishbudget_prediction,
+                 margin = 'documents',
+                 groups = docvars(irishbudget_dfm, 'party'))+ggdark::dark_mode()
 
 
 
