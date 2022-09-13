@@ -110,6 +110,22 @@ head(docvars(data_corpus_inaugural))
 
 
 
+# tokenize
+inaug_tokens = tokens(data_corpus_inaugural)
+
+# multi word expressions
+# Functions for tokens objects take a character vector, a dictionary or collocations as pattern.
+multiword = c('science','reason')
+
+head( kwic(inaug_tokens, pattern = phrase(multiword)))
+
+
+
+
+
+
+
+s
 
 #--------- feature extracting from a corpus
 # quanteda::dfm() for document feature matrix
@@ -170,6 +186,147 @@ textplot_wordcloud(uk_2010_dfm,
 
 
 # grouping documents by document var
+
+inaugural_dfm = tail(data_corpus_inaugural, 20) %>% 
+  tokens(remove_punct = T) %>% 
+  tokens_remove(stopwords('en')) %>% 
+  dfm() %>% 
+  dfm_group(groups = Party)
+
+inaugural_dfm
+
+dfm_sort(inaugural_dfm )
+
+
+# grouping words by dictionary or equivalent class
+# example: 'terrorism' and 'economy' related words vary based on President
+inaug_speech_1991 = corpus_subset(data_corpus_inaugural, Year > 1991)
+
+# define a demo dictionary
+dict_list = list(terror= c('terrorism','terrorists','threat','attack'), economy= c('jobs','business','grow','work'))
+
+special_dictionary = dictionary( dict_list)
+
+# use dictionary when using dfm
+inaug_speech_1991_dict = tokens(inaug_speech_1991) %>% 
+  tokens_lookup(dictionary = special_dictionary) %>% 
+  dfm()
+
+inaug_speech_1991_dict
+
+# L = list(terror = c('one','two','three'), unicorns= c('magic','fantasy','awesome'))
+# L$terror[1]
+# dictionary(L)
+
+
+
+
+
+# similarities between texts 
+library(quanteda.textstats)
+
+inaug_speech_1980_dfm = corpus_subset(data_corpus_inaugural, Year > 1980) %>% 
+  tokens(remove_punct = T) %>% 
+  tokens_wordstem(language = 'en') %>% 
+  tokens_remove(stopwords('en')) %>% 
+  dfm()
+
+inaug_speech_1980_dfm
+obama_speeches = inaug_speech_1980_dfm[ c('2009-Obama','2013-Obama'), ]
+
+# find similar text stats 
+obama_textstat = textstat_simil(inaug_speech_1980_dfm, 
+               obama_speeches, 
+               margin = 'documents',
+               method = 'cosine'
+               )
+
+obama_textstat_list = as.list(obama_textstat)
+
+dotchart(obama_textstat_list$`2013-Obama`, xlab = 'Cosine similarity', pch = 19)
+
+
+
+
+
+
+# clustering Presidents
+sotu_dfm = corpus_subset(data_corpus_sotu, Date > as.Date('1980-01-01')) %>% 
+  tokens(remove_punct = T) %>% 
+  tokens_wordstem(language = 'en') %>% 
+  tokens_remove(stopwords('en')) %>% 
+  dfm()
+
+# trim the dfm
+sotu_dfm_trim = dfm_trim(sotu_dfm, min_termfreq = 5, min_docfreq = 3)
+
+# hierarchical clustering - get distances on normalized dfm
+sotu_textstat_dist = textstat_dist( dfm_weight(sotu_dfm_trim, scheme = 'prop'))
+
+# hierarchical clustering the distance object
+president_cluster = hclust( as.dist( sotu_textstat_dist))
+
+# label with document names
+president_cluster$labels = docnames(sotu_dfm_trim)
+
+# plot a dendrogram
+plot( president_cluster, xlab = "", sub = "", main = 'Euclidian distance on normalized token frequency')
+
+
+# term similarities
+sotu_textstat = textstat_simil(sotu_dfm_trim, 
+               sotu_dfm_trim[ , c('fair','health','terror')],
+               method = 'cosine',
+               margin = 'features'
+               )
+
+lapply( as.list(sotu_textstat), head, 10)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# topic models
+
+irish_budget = tokens(data_corpus_irishbudget2010,
+       remove_punct = T,
+       remove_numbers = T
+       ) %>% 
+  tokens_remove(stopwords('en')) %>% 
+  dfm()
+
+irish_budget_trim = dfm_trim(irish_budget, min_termfreq = 4, max_docfreq = 10)
+irish_budget_trim
+
+
+# fit topic model
+set.seed(100)
+
+# structured topic models (stm)
+library(stm)
+irish_stm_20 = stm(irish_budget_trim, K= 20, verbose=F)
+plot(irish_stm_20)
+
+
+
+
+
+
+
+
+
+
 
 
 
