@@ -393,7 +393,20 @@ textplot_wordcloud(inaug_dfm,
 
 
 
-# lexical dispersion plot 
+
+
+
+
+
+
+
+
+# ----------- lexical dispersion plot 
+
+# Lexical dispersion is a measure of how frequently a word appears across 
+# the parts of a corpus. This plot notes the occurrences of a word and how many 
+# words from the beginning of the corpus it appears (word offsets).
+
 
 # example 
 # inaug_subset1949 = corpus_subset(data_corpus_inaugural, Year > 1949)
