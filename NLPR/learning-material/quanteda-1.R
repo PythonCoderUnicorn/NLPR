@@ -120,12 +120,46 @@ multiword = c('science','reason')
 head( kwic(inaug_tokens, pattern = phrase(multiword)))
 
 
+# compound tokens 
+# take 'United States' => 'United_States'
+comp_tokens = tokens_compound(inaug_tokens, pattern = phrase( c('United States', 'New York')))
+head( tokens_select( comp_tokens, pattern = c('United_States','New_York')))
+
+
+
+# multi word dictionary 
+multiword_dict = dictionary( list(country='United States', city='New York') )
+
+# lookup dictionary
+head( tokens_lookup( inaug_tokens, dictionary = multiword_dict))
+
+
+# collocations
+library(quanteda.textstats)
+
+collocats = inaug_tokens %>% 
+  tokens_remove(stopwords('en')) %>% 
+  tokens_select(pattern = "^[A-Z]",
+                valuetype = 'regex',
+                case_insensitive = F,
+                padding = T) %>% 
+  textstat_collocations(min_count = 5, tolower = F)
+
+
+head(collocats)
+
+
+# compound collocations
+collocats2 = tokens_compound(inaug_tokens, pattern = collocats)
+head( kwic( collocats2, pattern = c('science','reason')))
 
 
 
 
 
-s
+
+
+
 
 #--------- feature extracting from a corpus
 # quanteda::dfm() for document feature matrix
@@ -317,6 +351,121 @@ set.seed(100)
 library(stm)
 irish_stm_20 = stm(irish_budget_trim, K= 20, verbose=F)
 plot(irish_stm_20)
+
+
+
+
+
+
+# text data viz
+library(quanteda.textplots)
+
+# wordcloud
+  
+
+textplot_wordcloud(inaug_speech_1980_dfm,
+                   min_count = 6,
+                   random_order = F,
+                   random_color = T,
+                   rotation = 0.25,
+                   color = RColorBrewer::brewer.pal(8,'Reds'),
+                   
+)
+
+# comparison cloud
+inaug_dfm = corpus_subset(data_corpus_inaugural,
+              President %in% c('Clinton','Obama','Trump')) %>% 
+  tokens(remove_punct = T) %>% 
+  tokens_remove(stopwords('en')) %>% 
+  dfm() %>% 
+  dfm_group(groups = President) %>% 
+  dfm_trim(min_termfreq = 5, verbose = F) 
+
+inaug_dfm %>% 
+  textplot_wordcloud(comparison = T, random_color = F,
+                     color = c('purple','blue','orange'))
+
+
+textplot_wordcloud(inaug_dfm,
+                   min_count = 10,
+                   color = c('red', 'pink', 'green', 'purple', 'orange', 'blue') )
+
+
+
+
+# lexical dispersion plot 
+
+# example 
+# inaug_subset1949 = corpus_subset(data_corpus_inaugural, Year > 1949)
+
+kwic(tokens(inaug_speech_1991), # 1991 has fewer Presidents, less noise on plot
+     pattern = "love") %>% 
+  textplot_xray()+
+  ggdark::dark_mode()
+
+
+# multiple kwic objects
+textplot_xray(
+  kwic(inaug_speech_1991, pattern= 'american'),
+  kwic(inaug_speech_1991, pattern= 'people'),
+  kwic(inaug_speech_1991, pattern='love')
+)+
+  ggdark::dark_mode()
+
+
+
+# using gutenberg document for multiwords
+library(readtext)
+
+sherlock_book_url = "https://www.gutenberg.org/files/1661/1661-0.txt"
+sherlock = texts( readtext(sherlock_book_url))
+
+# label the text file 
+names( sherlock) = 'Sherlock'
+
+textplot_xray(
+  kwic( tokens(sherlock), pattern= 'watson'), # watson, doubt
+  kwic( tokens(sherlock), pattern= 'dear') # contrary, elementary
+)+
+  ggdark::dark_mode()
+
+# absolute scale of tokens
+textplot_xray(
+  kwic( tokens(sherlock), pattern= 'watson'), # watson, doubt
+  kwic( tokens(sherlock), pattern= 'dear'),# contrary, elementary
+  scale = 'absolute'
+)+
+  ggdark::dark_mode()
+
+
+
+
+# modifying lexical dispersion plots
+library(ggplot2)
+
+g = textplot_xray(
+  kwic( tokens(sherlock), pattern= 'watson'), # watson, doubt
+  kwic( tokens(sherlock), pattern= 'dear'),# contrary, elementary
+  scale = 'absolute'
+)+
+  ggdark::dark_mode()
+
+g + aes(color= keyword)+
+  scale_color_manual(values =  c('blue','red','green'))
+
+
+
+
+
+
+
+# frequency plots !
+
+
+
+
+
+
 
 
 
