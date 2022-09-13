@@ -579,13 +579,30 @@ ggplot(
 
 
 
+# plot 'keyness' in target & ref group
+# compare inaugural speech Obama vs Trump 
 
+corpus_obama_trump = corpus_subset(data_corpus_inaugural, President %in% c('Obama','Trump'))
 
+# dfm grouped by president
+obama_trump_dfm = tokens(corpus_obama_trump, remove_punct = T) %>% 
+  tokens_remove(stopwords('en')) %>% 
+  tokens_group(groups = President ) %>% 
+  dfm()
 
+# calculate the keyness
+trump_keyness = textstat_keyness(obama_trump_dfm, target = 'Trump')
 
+# plot estimated word keyness
+textplot_keyness(trump_keyness, color = c('orange','blue'), labelcolor = 'grey70')+
+  ggdark::dark_mode()
 
-
-
+textplot_keyness(trump_keyness, 
+                 show_reference = F,
+                 color = 'orange',
+                 labelcolor = 'grey70'
+                 )+ 
+  ggdark::dark_mode()
 
 
 
