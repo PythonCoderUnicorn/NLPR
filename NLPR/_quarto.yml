@@ -8,6 +8,7 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
+    - Quanteda-corpus.qmd
     - test.Rmd
     - summary.qmd
     - references.qmd

@@ -1,0 +1,114 @@
+
+# Quanteda 
+
+This section is for the Quanteda tutorials, which has 3 components (object types).
+
+The 3 object types:
+
+1. `corpus` = character strings and variables in data frames, combines texts with document level variables
+
+2. `tokens` = tokens in a list of vectors, keeping the position of words
+
+3. `document-feature-matrix` (DFM) = represents frequencies in a document in a matrix, no positions of words, can use bag-of-words analysis
+
+
+## Libraries
+
+Here is the list of Quanteda libraries to install and load in order to follow along with any part of the tutorial.
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages("quanteda")
+# install.packages("quanteda.textmodels") 
+# devtools::install_github("quanteda/quanteda.corpora")
+# devtools::install_github("kbenoit/quanteda.dictionaries")
+# install.packages("readtext")
+
+library(quanteda)
+library(quanteda.textmodels)
+library(quanteda.textstats)
+library(quanteda.textplots)
+library(quanteda.corpora)
+# used for reading in text data
+library(readtext)
+```
+
+The `readtext` package supports: plain text files `(.txt), JSON, csv, .tab, .tsv, .xml, pdf, .doc, .docx, etc` and can be used to read a book for the [Project Gutenberg](https://www.gutenberg.org/) for text analysis.
+
+
+After you have properly installed and loaded the libraries, you can access
+the the data corpus available without the need of reading in a `csv` file.
+Load in a corpus from Quanteda package and save it as a variable.
+
+Corpus available:
+
+- data_corpus_amicus
+- data_corpus_dailnoconf1991
+- data_corpus_EPcoaldebate
+- data_corpus_immigrationnews
+- data_corpus_inaugural  _most common used one in tutorial_
+- data_corpus_irishbudget2010
+- data_corpus_irishbudgets
+- data_corpus_moviereviews
+- data_corpus_sotu  _State of the Union speeches_
+- data_corpus_udhr
+- data_corpus_ukmanifestos
+- data_corpus_ungd2017
+
+
+```{r}
+# to load a corpus and save it as variable name
+corpus = corpus(data_char_ukimmig2010)
+```
+
+
+
+## Corpus
+
+Load the corpus `data_corpus_ukmanifestos`, which is about British election manifestos on immigration and asylum.
+
+```{r}
+brit_manifesto = corpus(data_corpus_ukmanifestos,
+                        docvars = data.frame(party = names(data_corpus_ukmanifestos)))
+
+
+brit_manifesto
+```
+
+```{r}
+head( summary(brit_manifesto) )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

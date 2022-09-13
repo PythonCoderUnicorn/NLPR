@@ -33,5 +33,26 @@
     "title": "2  Testing Rmd",
     "section": "",
     "text": "this is a test of Rmd inside a Quarto book"
+  },
+  {
+    "objectID": "Quanteda-corpus.html",
+    "href": "Quanteda-corpus.html",
+    "title": "2  Quanteda",
+    "section": "",
+    "text": "This section is for the Quanteda tutorials, which has 3 components (object types).\nThe 3 object types:"
+  },
+  {
+    "objectID": "Quanteda-corpus.html#libraries",
+    "href": "Quanteda-corpus.html#libraries",
+    "title": "2  Quanteda",
+    "section": "2.1 Libraries",
+    "text": "2.1 Libraries\nHere is the list of Quanteda libraries to install and load in order to follow along with any part of the tutorial.\n\n# install.packages(\"quanteda\")\n# install.packages(\"quanteda.textmodels\") \n# devtools::install_github(\"quanteda/quanteda.corpora\")\n# devtools::install_github(\"kbenoit/quanteda.dictionaries\")\n# install.packages(\"readtext\")\n\nlibrary(quanteda)\nlibrary(quanteda.textmodels)\nlibrary(quanteda.textstats)\nlibrary(quanteda.textplots)\nlibrary(quanteda.corpora)\n# used for reading in text data\nlibrary(readtext)\n\nThe readtext package supports: plain text files (.txt), JSON, csv, .tab, .tsv, .xml, pdf, .doc, .docx, etc and can be used to read a book for the Project Gutenberg for text analysis.\nAfter you have properly installed and loaded the libraries, you can access the the data corpus available without the need of reading in a csv file. Load in a corpus from Quanteda package and save it as a variable.\nCorpus available:\n\ndata_corpus_amicus\ndata_corpus_dailnoconf1991\ndata_corpus_EPcoaldebate\ndata_corpus_immigrationnews\ndata_corpus_inaugural most common used one in tutorial\ndata_corpus_irishbudget2010\ndata_corpus_irishbudgets\ndata_corpus_moviereviews\ndata_corpus_sotu State of the Union speeches\ndata_corpus_udhr\ndata_corpus_ukmanifestos\ndata_corpus_ungd2017\n\n\n# to load a corpus and save it as variable name\ncorpus = corpus(data_char_ukimmig2010)"
+  },
+  {
+    "objectID": "Quanteda-corpus.html#corpus",
+    "href": "Quanteda-corpus.html#corpus",
+    "title": "2  Quanteda",
+    "section": "2.2 Corpus",
+    "text": "2.2 Corpus\nLoad the corpus data_corpus_ukmanifestos, which is about British election manifestos on immigration and asylum.\n\nbrit_manifesto = corpus(data_corpus_ukmanifestos,\n                        docvars = data.frame(party = names(data_corpus_ukmanifestos)))\n\n\nbrit_manifesto\n\nCorpus consisting of 101 documents and 1 docvar.\nUK_natl_1945_en_Con :\n\"CONSERVATIVE PARTY: 1945  Mr. Churchill's Declaration of Pol...\"\n\nUK_natl_1945_en_Lab :\n\"Labour Party: 1945  Let Us Face the Future: A Declaration of...\"\n\nUK_natl_1945_en_Lib :\n\"LIBERAL MANIFESTO 1945  20 Point Manifesto of the Liberal Pa...\"\n\nUK_natl_1950_en_Con :\n\"CONSERVATIVE PARTY: 1950  This is the Road: The Conservative...\"\n\nUK_natl_1950_en_Lab :\n\"LABOUR PARTY: 1950  Let Us Win Through Together: A Declarati...\"\n\nUK_natl_1950_en_Lib :\n\"LIBERAL PARTY 1950  No Easy Way: Britain's Problems and the ...\"\n\n[ reached max_ndoc ... 95 more documents ]\n\n\n\nhead( summary(brit_manifesto) )\n\n                 Text Types Tokens Sentences               party\n1 UK_natl_1945_en_Con  1752   6679       269 UK_natl_1945_en_Con\n2 UK_natl_1945_en_Lab  1433   5492       234 UK_natl_1945_en_Lab\n3 UK_natl_1945_en_Lib  1208   3729       157 UK_natl_1945_en_Lib\n4 UK_natl_1950_en_Con  2075   8075       366 UK_natl_1950_en_Con\n5 UK_natl_1950_en_Lab  1541   5392       274 UK_natl_1950_en_Lab\n6 UK_natl_1950_en_Lib  1202   3322       136 UK_natl_1950_en_Lib"
   }
 ]
