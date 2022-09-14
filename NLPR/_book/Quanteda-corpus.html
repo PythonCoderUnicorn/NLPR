@@ -193,7 +193,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#corpus" id="toc-corpus" class="nav-link" data-scroll-target="#corpus"> <span class="header-section-number">2.2</span> Corpus</a>
   <ul class="collapse">
   <li><a href="#docvars" id="toc-docvars" class="nav-link" data-scroll-target="#docvars"> <span class="header-section-number">2.2.1</span> docvars</a></li>
-  <li><a href="#subset" id="toc-subset" class="nav-link" data-scroll-target="#subset"> <span class="header-section-number">2.2.2</span> Subset</a></li>
+  <li><a href="#subset" id="toc-subset" class="nav-link" data-scroll-target="#subset"> <span class="header-section-number">2.2.2</span> subset</a></li>
+  <li><a href="#reshape" id="toc-reshape" class="nav-link" data-scroll-target="#reshape"> <span class="header-section-number">2.2.3</span> reshape</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -356,7 +357,7 @@ UK_natl_1950_en_Lib :
 </div>
 </section>
 <section id="subset" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="subset"><span class="header-section-number">2.2.2</span> Subset</h3>
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="subset"><span class="header-section-number">2.2.2</span> subset</h3>
 <p>This section is about using the <code>corpus_subset()</code> function on all <code>docvars</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#--- get the Inaugural Speeches</span></span>
@@ -410,6 +411,67 @@ UK_natl_1950_en_Lib :
 2013-Obama :
 "Vice President Biden, Mr. Chief Justice, Members of the Unit..."</code></pre>
 </div>
+</div>
+</section>
+<section id="reshape" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="reshape"><span class="header-section-number">2.2.3</span> reshape</h3>
+<p>You can reshape the document paragraphs to sentences, which can be restored even after being modified by functions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>UN_corpus <span class="ot">=</span> <span class="fu">corpus</span>(data_corpus_ungd2017)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 196 documents, 7 docvars</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(UN_corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 6 documents and 7 docvars.
+Afghanistan :
+"As I stand here before the General Assembly today, I am remi..."
+
+Angola :
+"On behalf of the Government of the Republic of Angola, allow..."
+
+Albania :
+"How many times has it happened that humankind has been confr..."
+
+Andorra :
+"I would like to begin by congratulating the President, Mr. M..."
+
+United Arab Emirates :
+"I would like to begin by congratulating the President on his..."
+
+Argentina :
+"I am very honoured and very happy to be here today represent..."</code></pre>
+</div>
+</div>
+<p>Now change the document into sentences</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>UN_corpus_sentences <span class="ot">=</span> <span class="fu">corpus_reshape</span>(UN_corpus, <span class="at">to=</span> <span class="st">'sentences'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(UN_corpus_sentences)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 6 documents and 7 docvars.
+Afghanistan.1 :
+"As I stand here before the General Assembly today, I am remi..."
+
+Afghanistan.2 :
+"Shaped by the Great Depression and tempered by the carnage o..."
+
+Afghanistan.3 :
+"The United Nations, the International Monetary Fund, the Wor..."
+
+Afghanistan.4 :
+"There can be little doubt that today the scale, scope and sp..."
+
+Afghanistan.5 :
+"But future historians will judge those institutions on how t..."
+
+Afghanistan.6 :
+"As global leaders, we seek certainty and familiarity in the ..."</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># there is now 16806 number of documents</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To change back</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>UN_corpus_doc <span class="ot">=</span> <span class="fu">corpus_reshape</span>(UN_corpus_sentences, <span class="at">to=</span> <span class="st">'documents'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

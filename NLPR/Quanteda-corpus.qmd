@@ -114,7 +114,7 @@ head(docvars(inaug_corpus))
 
 
 
-### Subset
+### subset
 
 This section is about using the `corpus_subset()` function on all `docvars`.
 
@@ -148,6 +148,60 @@ democrat_corpus_subset =  corpus_subset(inaug_corpus,
 
 democrat_corpus_subset
 ```
+
+
+
+
+
+### reshape
+
+You can reshape the document paragraphs to sentences, which can be restored even after being
+modified by functions.
+
+
+```{r}
+UN_corpus = corpus(data_corpus_ungd2017)
+
+# 196 documents, 7 docvars
+head(UN_corpus)
+```
+
+
+Now change the document into sentences
+
+```{r}
+UN_corpus_sentences = corpus_reshape(UN_corpus, to= 'sentences')
+
+head(UN_corpus_sentences)
+
+# there is now 16806 number of documents
+```
+
+To change back 
+
+```{r}
+UN_corpus_doc = corpus_reshape(UN_corpus_sentences, to= 'documents')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
