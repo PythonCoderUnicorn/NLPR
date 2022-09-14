@@ -483,6 +483,134 @@ head(sotu_not_ngrams_select, 3)
 
 
 
+## document-feature-matrix
+
+
+A document-feature-matrix (dfm) is made from tokens objects. Unlike all the work
+previously the objects returned were documents in a row with `docvars` for each tokens
+operation performed. A `dfm` returns a dataframe like object with features and docvars.
+
+
+```{r}
+# -- continue to use the sotu tokens object where punctuation etc. was removed
+# sotu_corpus_tokens
+
+sotu_corpus_dfm = dfm(sotu_corpus_tokens)
+
+head(sotu_corpus_dfm)
+
+```
+
+
+
+Common functions to use with a document-feature-matrix:
+
+- `docnames( )`
+- `featnames( )`
+- `rowSums( )`
+- `colSums( )`
+
+
+To get the most frequent features can be retrieved by using `topfeatures()`
+
+
+```{r}
+#-- this corpus dfm has stopwords included
+# topfeatures(sotu_corpus_dfm)
+
+#-- to use the cleaned corpus need to make it a dfm
+
+sotu_corpus_tokens_clean_dfm = dfm(sotu_corpus_tokens_clean)
+
+topfeatures(sotu_corpus_tokens_clean_dfm)
+```
+
+
+To get a proportion of a feature within documents total count, use 
+the `dfm_weight(scheme='prop')`, which is a relative frequency.
+The scheme by default is 'count'.
+
+
+```{r}
+# dfm_weight(sotu_corpus_dfm, scheme = 'prop')
+
+dfm_weight(sotu_corpus_tokens_clean_dfm, scheme = 'prop')
+```
+
+
+
+Get the weight of dfm by `tf-idf` frequency inverse document frequency
+
+```{r}
+dfm_tfidf(sotu_corpus_tokens_clean_dfm, 
+          scheme_df = 'inverse', 
+          scheme_tf = 'count'
+          )
+```
+
+
+### dfm_keep
+
+You can select features from a dfm using `dfm_select()` and `dfm_keep()`, keep the number 
+of features at least the number of times.
+
+```{r}
+# -- continue with sotu tokens dfm
+# sotu_corpus_tokens_clean_dfm
+
+sotu_clean_dfm_keep = dfm_keep(sotu_corpus_tokens_clean_dfm,
+                               min_nchar= 5)
+
+head(sotu_clean_dfm_keep)
+
+```
+
+
+See the topfeatures for the min characters 
+
+```{r}
+topfeatures( sotu_clean_dfm_keep)
+```
+
+If the number of features is below a number threshold that you want, you can 
+use the `min_termfreq = n` to drop the features below `n`. In this example we use
+10, so any feature that appears less than 10 times in all of the document will be 
+removed. If `max_docfreq = 0.1`, then features more than 10% of the documents will be
+removed.
+
+```{r}
+#  an option is to include docfreq_type= 'prop'
+#  for relative proportion
+
+sotu_clean_minfreq = dfm_trim(sotu_corpus_tokens_clean_dfm,
+                              min_termfreq = 10)
+
+head(sotu_clean_minfreq)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
