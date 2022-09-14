@@ -202,6 +202,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#kwic" id="toc-kwic" class="nav-link" data-scroll-target="#kwic"> <span class="header-section-number">2.3.1</span> kwic</a></li>
   <li><a href="#select-tokens" id="toc-select-tokens" class="nav-link" data-scroll-target="#select-tokens"> <span class="header-section-number">2.3.2</span> select tokens</a></li>
   <li><a href="#compund-tokens" id="toc-compund-tokens" class="nav-link" data-scroll-target="#compund-tokens"> <span class="header-section-number">2.3.3</span> compund tokens</a></li>
+  <li><a href="#n-grams" id="toc-n-grams" class="nav-link" data-scroll-target="#n-grams"> <span class="header-section-number">2.3.4</span> n-grams</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -815,6 +816,89 @@ character(0)</code></pre>
  | dependencies have been involved in
  | sea-men agents were appointed one 
  | vessels by the cruisers of        </code></pre>
+</div>
+</div>
+</section>
+<section id="n-grams" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="n-grams"><span class="header-section-number">2.3.4</span> n-grams</h3>
+<p>You can make n-grams in any length from tokens using the <code>tokens_ngrams()</code> which makes a sequence of tokens.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -- pass in the sotu corpus tokens object</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    n-gram will be from 2 to 4</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>sotu_corpus_ngrams <span class="ot">=</span> <span class="fu">tokens_ngrams</span>(sotu_corpus_tokens, <span class="at">n=</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co"># for simplicity, the 1st document is shown</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1st document, 20 of the docvars n-grams</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_corpus_ngrams[[<span class="dv">1</span>]], <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Fellow-Citizens_of" "of_the"             "the_Senate"        
+ [4] "Senate_and"         "and_House"          "House_of"          
+ [7] "of_Representatives" "Representatives_I"  "I_embrace"         
+[10] "embrace_with"       "with_great"         "great_satisfaction"
+[13] "satisfaction_the"   "the_opportunity"    "opportunity_which" 
+[16] "which_now"          "now_presents"       "presents_itself"   
+[19] "itself_of"          "of_congratulating" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># head(sotu_corpus_ngrams, 3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can skip n-grams</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>sotu_corpus_ngrams_skip <span class="ot">=</span> <span class="fu">tokens_ngrams</span>(sotu_corpus_tokens,</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">n=</span> <span class="dv">2</span>,</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">skip =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                                        )</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># notice the document returns [1][4] ...</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_corpus_ngrams_skip, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 2 documents and 6 docvars.
+Washington-1790 :
+ [1] "Fellow-Citizens_the"    "Fellow-Citizens_Senate" "of_Senate"             
+ [4] "of_and"                 "the_and"                "the_House"             
+ [7] "Senate_House"           "Senate_of"              "and_of"                
+[10] "and_Representatives"    "House_Representatives"  "House_I"               
+[ ... and 2,153 more ]
+
+Washington-1790b :
+ [1] "Fellow-Citizens_the"    "Fellow-Citizens_Senate" "of_Senate"             
+ [4] "of_and"                 "the_and"                "the_House"             
+ [7] "Senate_House"           "Senate_of"              "and_of"                
+[10] "and_Representatives"    "House_Representatives"  "House_In"              
+[ ... and 2,783 more ]</code></pre>
+</div>
+</div>
+<p>Selective ngrams</p>
+<p>Selecting ngrams based on a keyword, phrase or a vector of words is done by using the <code>tokens_compound()</code> and <code>tokens_select()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- select phrases that have 'not'</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>phrase_not <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"not *"</span>,<span class="st">"not_*"</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>sotu_not_ngrams <span class="ot">=</span> <span class="fu">tokens_compound</span>(sotu_corpus_tokens,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">pattern =</span> <span class="fu">phrase</span>(phrase_not)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>sotu_not_ngrams_select <span class="ot">=</span> <span class="fu">tokens_select</span>(sotu_not_ngrams, </span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>                                       <span class="co"># need to include again</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">pattern =</span> <span class="fu">phrase</span>(phrase_not)</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>                                       )</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_not_ngrams_select, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 3 documents and 6 docvars.
+Washington-1790 :
+[1] "not_but"     "not_only"    "not_I"       "not_forbear"
+
+Washington-1790b :
+[1] "not_only"      "not_fail"      "not_less"      "not_be"       
+[5] "not_overlook"  "not_less"      "not_think"     "not_desirable"
+[9] "not_merely"   
+
+Washington-1791 :
+[1] "not_fail"    "not_only"    "not_forbear" "not_fail"   </code></pre>
 </div>
 </div>
 

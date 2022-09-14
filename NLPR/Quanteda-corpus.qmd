@@ -418,12 +418,66 @@ head( kwic(america_token_compound, pattern = searched_words2) )
 
 
 
+### n-grams
+
+You can make n-grams in any length from tokens using the `tokens_ngrams()` which
+makes a sequence of tokens.
+
+```{r}
+# -- pass in the sotu corpus tokens object
+#    n-gram will be from 2 to 4
+
+sotu_corpus_ngrams = tokens_ngrams(sotu_corpus_tokens, n= 2:4)
+
+# for simplicity, the 1st document is shown
+# 1st document, 20 of the docvars n-grams
+
+head(sotu_corpus_ngrams[[1]], 20)
+
+# head(sotu_corpus_ngrams, 3)
+```
+
+
+You can skip n-grams
+
+
+```{r}
+sotu_corpus_ngrams_skip = tokens_ngrams(sotu_corpus_tokens,
+                                        n= 2,
+                                        skip = 1:2
+                                        )
+
+# notice the document returns [1][4] ...
+
+head(sotu_corpus_ngrams_skip, 2)
+```
 
 
 
+Selective ngrams
 
 
+Selecting ngrams based on a keyword, phrase or a vector of words is done by
+using the `tokens_compound()` and `tokens_select()`.
 
+
+```{r}
+#-- select phrases that have 'not'
+
+phrase_not = c("not *","not_*")
+
+sotu_not_ngrams = tokens_compound(sotu_corpus_tokens,
+                pattern = phrase(phrase_not)
+                )
+
+sotu_not_ngrams_select = tokens_select(sotu_not_ngrams, 
+                                       # need to include again
+                                       pattern = phrase(phrase_not)
+                                       )
+
+head(sotu_not_ngrams_select, 3)
+
+```
 
 
 
