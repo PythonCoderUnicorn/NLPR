@@ -250,7 +250,169 @@ cbind(docvars(corp_speakers), text = as.character(corp_speakers))
 
 
 
+## Tokens
 
+Tokens segments texts in a corpus (words or sentences) by word boundaries.
+
+
+```{r}
+# step 1 - load in corpus
+sotu_corpus = corpus(data_corpus_sotu)
+
+# step 2 - pass in the corpus into tokens function
+# using the tokens() you can remove punctuation and numbers
+
+sotu_corpus_tokens = tokens(sotu_corpus, 
+                            remove_punct = TRUE,
+                            remove_symbols = TRUE,
+                            remove_numbers = TRUE,
+                            remove_url = TRUE
+                            )
+
+head(sotu_corpus_tokens, 3)
+```
+
+
+
+
+
+### kwic
+
+Keyword-in-contexts (kwic) is the method used to search for keywords in corpus documents.
+
+```{r}
+#-- continue using the tokenized corpus of State of the Union
+# sotu_corpus_tokens
+
+# keyword to search the corpus follows the pattern argument
+# our keyword here will be 'love'
+# save kwic in a variable
+
+keyword_search =  kwic(sotu_corpus_tokens, pattern = 'love')
+
+head(keyword_search)
+```
+
+
+
+You can search for multiple words by using a vector.
+
+
+```{r}
+search_words = c('love','science')
+
+searched_words = kwic(sotu_corpus_tokens, pattern = search_words)
+
+head(searched_words)
+```
+
+
+
+
+For multi-word expressions, use the `phrase()` function after the pattern argument.
+
+```{r}
+us_searchword = kwic(sotu_corpus_tokens, pattern =  phrase("United States"))
+
+head(us_searchword)
+```
+
+
+To view all of the keyword search results in a RStudio window.
+
+```{r}
+# view(us_searchword)
+```
+
+
+
+
+### select tokens
+
+
+You can remove tokens that you do not want or interest in, this can be either on its own
+or in combination with `stopwords()` function.
+
+So far we have tokenized the State of the Union corpus and did some keyword searched, but the
+corpus still has `stopwords` inside the text, to remove them we use the 
+function `tokens_select()` and pass in the stopwords along with the language parameter.
+
+
+```{r}
+#-- continue using sotu corpus
+
+sotu_corpus_tokens_clean = tokens_select(sotu_corpus_tokens,
+              pattern =  stopwords('en'), # 'en' for English
+              selection = 'remove'
+              )
+
+head(sotu_corpus_tokens_clean, 3)
+
+#---- equivalent function call
+#  tokens_remove( sotu_corpus_tokens, pattern= stopwords('en'), padding= FALSE )
+```
+
+
+For very specific words that interest you in token selection, you can pass in a 
+vector of those words.
+
+```{r}
+specific_words = c('love','scien*','reason')
+
+specific_tokens_select = tokens_select(sotu_corpus_tokens,
+                                       pattern = specific_words,
+                                       padding = FALSE
+                                       )
+
+# Tokens consisting of 241 documents and 6 docvars.
+head(specific_tokens_select)
+```
+
+
+To see the words that surround the selected token, use the window argument, here the window 
+is 5 words.
+
+```{r}
+window_token_select = tokens_select(sotu_corpus_tokens, 
+              pattern = specific_words, 
+              padding = F, 
+              window = 5
+              )
+
+head(window_token_select, 3)
+```
+
+
+
+
+### compund tokens
+
+Similar to what we already did, there is a `tokens_compound()` function
+that uses a vector for tokens to search. This will look just like the `kwic()` function.
+
+
+```{r}
+#---- kwic() 
+searched_words2 = c("americ*", "american people")
+
+america_kwic = kwic(sotu_corpus_tokens, pattern = searched_words2)
+
+head(america_kwic)
+
+```
+
+
+
+```{r}
+#---- tokens_compound
+
+america_token_compound = tokens_compound(sotu_corpus_tokens,
+                pattern = phrase(searched_words2) 
+                )
+
+# head(america_token_compound)
+head( kwic(america_token_compound, pattern = searched_words2) )
+```
 
 
 

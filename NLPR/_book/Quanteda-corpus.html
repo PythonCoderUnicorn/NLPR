@@ -197,6 +197,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#reshape" id="toc-reshape" class="nav-link" data-scroll-target="#reshape"> <span class="header-section-number">2.2.3</span> reshape</a></li>
   <li><a href="#segment" id="toc-segment" class="nav-link" data-scroll-target="#segment"> <span class="header-section-number">2.2.4</span> segment</a></li>
   </ul></li>
+  <li><a href="#tokens" id="toc-tokens" class="nav-link" data-scroll-target="#tokens"> <span class="header-section-number">2.3</span> Tokens</a>
+  <ul class="collapse">
+  <li><a href="#kwic" id="toc-kwic" class="nav-link" data-scroll-target="#kwic"> <span class="header-section-number">2.3.1</span> kwic</a></li>
+  <li><a href="#select-tokens" id="toc-select-tokens" class="nav-link" data-scroll-target="#select-tokens"> <span class="header-section-number">2.3.2</span> select tokens</a></li>
+  <li><a href="#compund-tokens" id="toc-compund-tokens" class="nav-link" data-scroll-target="#compund-tokens"> <span class="header-section-number">2.3.3</span> compund tokens</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -540,6 +546,275 @@ text1.6 :
 text1.1 Mr. Samwell Tarly:                  Text Analysis.
 text1.2         Mx. Jones:             More text analysis?
 text1.3 Mr. Samwell Tarly: we will do it again, and again.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tokens" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="tokens"><span class="header-section-number">2.3</span> Tokens</h2>
+<p>Tokens segments texts in a corpus (words or sentences) by word boundaries.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step 1 - load in corpus</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>sotu_corpus <span class="ot">=</span> <span class="fu">corpus</span>(data_corpus_sotu)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># step 2 - pass in the corpus into tokens function</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># using the tokens() you can remove punctuation and numbers</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>sotu_corpus_tokens <span class="ot">=</span> <span class="fu">tokens</span>(sotu_corpus, </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">remove_punct =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">remove_symbols =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">remove_numbers =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">remove_url =</span> <span class="cn">TRUE</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>                            )</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_corpus_tokens, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 3 documents and 6 docvars.
+Washington-1790 :
+ [1] "Fellow-Citizens" "of"              "the"             "Senate"         
+ [5] "and"             "House"           "of"              "Representatives"
+ [9] "I"               "embrace"         "with"            "great"          
+[ ... and 1,073 more ]
+
+Washington-1790b :
+ [1] "Fellow-Citizens" "of"              "the"             "Senate"         
+ [5] "and"             "House"           "of"              "Representatives"
+ [9] "In"              "meeting"         "you"             "again"          
+[ ... and 1,388 more ]
+
+Washington-1791 :
+ [1] "Fellow-Citizens" "of"              "the"             "Senate"         
+ [5] "and"             "House"           "of"              "Representatives"
+ [9] "In"              "vain"            "may"             "we"             
+[ ... and 2,285 more ]</code></pre>
+</div>
+</div>
+<section id="kwic" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="kwic"><span class="header-section-number">2.3.1</span> kwic</h3>
+<p>Keyword-in-contexts (kwic) is the method used to search for keywords in corpus documents.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- continue using the tokenized corpus of State of the Union</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sotu_corpus_tokens</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># keyword to search the corpus follows the pattern argument</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># our keyword here will be 'love'</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># save kwic in a variable</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>keyword_search <span class="ot">=</span>  <span class="fu">kwic</span>(sotu_corpus_tokens, <span class="at">pattern =</span> <span class="st">'love'</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(keyword_search)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                    
+ [Washington-1790b, 1327]        wisdom and animated by the | love |
+  [Washington-1793, 1122]  equity proceeding from a sincere | love |
+  [Washington-1795, 1011] acknowledgment to Heaven and pure | love |
+    [Jefferson-1801, 923]      of happiness educated in the | love |
+     [Jefferson-1807, 37]     earlier period than usual The | love |
+   [Jefferson-1808, 2621] unshaken by difficulties in their | love |
+                                       
+ of your country In whatever           
+ of peace and a liberality             
+ to our country to unite               
+ of order habituated to self-government
+ of peace so much cherished            
+ of liberty obedience to law           </code></pre>
+</div>
+</div>
+<p>You can search for multiple words by using a vector.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>search_words <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'love'</span>,<span class="st">'science'</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>searched_words <span class="ot">=</span> <span class="fu">kwic</span>(sotu_corpus_tokens, <span class="at">pattern =</span> search_words)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(searched_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                       
+   [Washington-1790, 641]   patronage than the promotion of | science |
+ [Washington-1790b, 1327]        wisdom and animated by the |  love   |
+  [Washington-1793, 1122]  equity proceeding from a sincere |  love   |
+  [Washington-1795, 1011] acknowledgment to Heaven and pure |  love   |
+  [Washington-1796, 1910]               of our youth in the | science |
+    [Jefferson-1801, 923]      of happiness educated in the |  love   |
+                                       
+ and literature Knowledge is in        
+ of your country In whatever           
+ of peace and a liberality             
+ to our country to unite               
+ of government In a republic           
+ of order habituated to self-government</code></pre>
+</div>
+</div>
+<p>For multi-word expressions, use the <code>phrase()</code> function after the pattern argument.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>us_searchword <span class="ot">=</span> <span class="fu">kwic</span>(sotu_corpus_tokens, <span class="at">pattern =</span>  <span class="fu">phrase</span>(<span class="st">"United States"</span>))</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(us_searchword)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                              
+    [Washington-1790, 47:48]      to the Constitution of the | United States |
+  [Washington-1790, 397:398] aggressors The interests of the | United States |
+  [Washington-1790, 520:521]     weights and measures of the | United States |
+  [Washington-1790, 956:957]  character and interests of the | United States |
+ [Washington-1790b, 520:521]              on the part of the | United States |
+ [Washington-1790b, 743:744]     and security enjoyed by the | United States |
+                                   
+ of which official information has 
+ require that our intercourse with 
+ is an object of great             
+ are so obviously so deeply        
+ renewed their violences with fresh
+ reminds us at the same            </code></pre>
+</div>
+</div>
+<p>To view all of the keyword search results in a RStudio window.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># view(us_searchword)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="select-tokens" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="select-tokens"><span class="header-section-number">2.3.2</span> select tokens</h3>
+<p>You can remove tokens that you do not want or interest in, this can be either on its own or in combination with <code>stopwords()</code> function.</p>
+<p>So far we have tokenized the State of the Union corpus and did some keyword searched, but the corpus still has <code>stopwords</code> inside the text, to remove them we use the function <code>tokens_select()</code> and pass in the stopwords along with the language parameter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- continue using sotu corpus</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>sotu_corpus_tokens_clean <span class="ot">=</span> <span class="fu">tokens_select</span>(sotu_corpus_tokens,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">pattern =</span>  <span class="fu">stopwords</span>(<span class="st">'en'</span>), <span class="co"># 'en' for English</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">selection =</span> <span class="st">'remove'</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_corpus_tokens_clean, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 3 documents and 6 docvars.
+Washington-1790 :
+ [1] "Fellow-Citizens" "Senate"          "House"           "Representatives"
+ [5] "embrace"         "great"           "satisfaction"    "opportunity"    
+ [9] "now"             "presents"        "congratulating"  "present"        
+[ ... and 488 more ]
+
+Washington-1790b :
+ [1] "Fellow-Citizens" "Senate"          "House"           "Representatives"
+ [5] "meeting"         "feel"            "much"            "satisfaction"   
+ [9] "able"            "repeat"          "congratulations" "favorable"      
+[ ... and 619 more ]
+
+Washington-1791 :
+ [1] "Fellow-Citizens" "Senate"          "House"           "Representatives"
+ [5] "vain"            "may"             "expect"          "peace"          
+ [9] "Indians"         "frontiers"       "long"            "lawless"        
+[ ... and 1,058 more ]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---- equivalent function call</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  tokens_remove( sotu_corpus_tokens, pattern= stopwords('en'), padding= FALSE )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For very specific words that interest you in token selection, you can pass in a vector of those words.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>specific_words <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'love'</span>,<span class="st">'scien*'</span>,<span class="st">'reason'</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>specific_tokens_select <span class="ot">=</span> <span class="fu">tokens_select</span>(sotu_corpus_tokens,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">pattern =</span> specific_words,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">padding =</span> <span class="cn">FALSE</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                                       )</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokens consisting of 241 documents and 6 docvars.</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(specific_tokens_select)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 6 documents and 6 docvars.
+Washington-1790 :
+[1] "reason"  "science"
+
+Washington-1790b :
+[1] "love"
+
+Washington-1791 :
+character(0)
+
+Washington-1792 :
+[1] "reason"
+
+Washington-1793 :
+[1] "reason" "love"  
+
+Washington-1794 :
+[1] "reason" "reason"</code></pre>
+</div>
+</div>
+<p>To see the words that surround the selected token, use the window argument, here the window is 5 words.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>window_token_select <span class="ot">=</span> <span class="fu">tokens_select</span>(sotu_corpus_tokens, </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">pattern =</span> specific_words, </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">padding =</span> F, </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">window =</span> <span class="dv">5</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(window_token_select, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 3 documents and 6 docvars.
+Washington-1790 :
+ [1] "regard"    "to"        "economy"   "There"     "was"       "reason"   
+ [7] "to"        "hope"      "that"      "the"       "pacific"   "patronage"
+[ ... and 10 more ]
+
+Washington-1790b :
+ [1] "wisdom"   "and"      "animated" "by"       "the"      "love"    
+ [7] "of"       "your"     "country"  "In"       "whatever"
+
+Washington-1791 :
+character(0)</code></pre>
+</div>
+</div>
+</section>
+<section id="compund-tokens" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="compund-tokens"><span class="header-section-number">2.3.3</span> compund tokens</h3>
+<p>Similar to what we already did, there is a <code>tokens_compound()</code> function that uses a vector for tokens to search. This will look just like the <code>kwic()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---- kwic() </span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>searched_words2 <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"americ*"</span>, <span class="st">"american people"</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>america_kwic <span class="ot">=</span> <span class="fu">kwic</span>(sotu_corpus_tokens, <span class="at">pattern =</span> searched_words2)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(america_kwic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                          
+  [Washington-1790b, 67]            by a considerable rise of | American |
+   [Washington-1794, 22]               of Heaven by which the | American |
+ [Washington-1794, 1988]     over that precious depository of | American |
+  [Washington-1795, 732]         nations of Europe with their | American |
+  [Washington-1796, 773]         the protection and relief of | American |
+      [Adams-1797, 1583] obligations The numerous captures of | American |
+                                   
+ stock abroad as well as           
+ people became a nation when       
+ happiness the Constitution of the 
+ dependencies have been involved in
+ sea-men agents were appointed one 
+ vessels by the cruisers of        </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---- tokens_compound</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>america_token_compound <span class="ot">=</span> <span class="fu">tokens_compound</span>(sotu_corpus_tokens,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">pattern =</span> <span class="fu">phrase</span>(searched_words2) </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># head(america_token_compound)</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( <span class="fu">kwic</span>(america_token_compound, <span class="at">pattern =</span> searched_words2) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                               
+  [Washington-1790b, 67]            by a considerable rise of |    American    
+   [Washington-1794, 22]               of Heaven by which the | American_people
+ [Washington-1794, 1987]     over that precious depository of |    American    
+  [Washington-1795, 732]         nations of Europe with their |    American    
+  [Washington-1796, 773]         the protection and relief of |    American    
+      [Adams-1797, 1583] obligations The numerous captures of |    American    
+                                     
+ | stock abroad as well as           
+ | became a nation when we           
+ | happiness the Constitution of the 
+ | dependencies have been involved in
+ | sea-men agents were appointed one 
+ | vessels by the cruisers of        </code></pre>
 </div>
 </div>
 
