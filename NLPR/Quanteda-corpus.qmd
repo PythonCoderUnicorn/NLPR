@@ -189,7 +189,63 @@ UN_corpus_doc = corpus_reshape(UN_corpus_sentences, to= 'documents')
 
 
 
+### segment
 
+You can extract segments of text and tags from documents, the use-case for this is
+analyzing documents or transcripts separately.
+
+
+Document sections
+
+
+The created mini text document that has 6 lines, which has section that 
+uses "##" as a pattern to organize the text into new lines. Here is what the
+text file contains.
+
+```{r}
+##INTRO This is the introduction.
+##DOC1 This is the first document.  Second sentence in Doc 1.
+##DOC3    Third document starts here.  End of third document.
+##INTRO                                               Document
+##NUMBER                                      Two starts before
+##NUMBER                                                 Three.
+```
+
+
+
+```{r}
+library(readr)
+
+# read in a simple text file as shown above
+txt_file = readr::read_file('./doctext.txt')
+
+# need to convert it to a corpus object
+txt_file_corpus = corpus(txt_file)
+
+# provide the pattern of ## in order for it to be separated into new lines
+txt_seg = corpus_segment(txt_file_corpus, pattern = "##*")
+txt_seg
+```
+
+
+By providing a pattern value for the `corpus_segment()` you can do regular expressions for
+removing words and symbols.
+
+
+```{r}
+# transform text into corpus
+corp_speeches = corpus("Mr. Samwell Tarly: Text Analysis.
+                        Mx. Jones: More text analysis?
+                        Mr. Samwell Tarly: we will do it again, and again.")
+
+# use corpus segment with regular expression pattern matching
+corp_speakers = corpus_segment(corp_speeches, 
+                                pattern = "\\b[A-Z].+\\s[A-Z][a-z]+:", 
+                                valuetype = "regex")
+
+# bind the rows together
+cbind(docvars(corp_speakers), text = as.character(corp_speakers))
+```
 
 
 
