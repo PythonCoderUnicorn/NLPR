@@ -81,11 +81,73 @@ head( summary(brit_manifesto) )
 
 
 
+### docvars
+
+Quanteda objects keep information associated with documents, these are 'document level variables'
+and are accessed using `docvars()` function.
+
+```{r}
+inaug_corpus = corpus(data_corpus_inaugural)
+
+head( docvars(inaug_corpus))
+```
 
 
 
+To extract `docvars` variables use the `field` argument or use the `$` like you normally use on a dataframe.
 
 
+```{r}
+docvars( inaug_corpus, field = 'Year')
+```
+
+
+Create or update `docvars`, in this example of creating a column for Century.
+
+```{r}
+floor_ = floor(docvars(inaug_corpus, field = 'Year') / 100)+1
+
+docvars(inaug_corpus, field = 'Century') = floor_
+
+head(docvars(inaug_corpus))
+```
+
+
+
+### Subset
+
+This section is about using the `corpus_subset()` function on all `docvars`.
+
+
+```{r}
+#--- get the Inaugural Speeches
+# inaug_corpus
+
+#--- look at the docvars
+# head( docvars(inaug_corpus))
+
+# now we subset the corpus for speeches after 1990
+inaug_corpus_subset1990s = corpus_subset(inaug_corpus, Year >= 1990)
+
+# check the number of documents 
+head(inaug_corpus_subset1990s, 3)
+```
+
+
+If you want only specific US Presidents. _Note that there are 2 data objects that appear when you type 'President', `presidents` from the {datasets} package and `presidential` from {ggplot2} package_.
+
+
+```{r}
+# select specific US Presidents
+selected_presidents = c('Obama','Clinton','Carter')
+
+democrat_corpus_subset =  corpus_subset(inaug_corpus,
+                                        President %in% selected_presidents
+                                        )
+
+
+democrat_corpus_subset
+```
 
 
 
