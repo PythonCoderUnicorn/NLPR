@@ -591,19 +591,74 @@ head(sotu_clean_minfreq)
 
 
 
+### dfm group
+
+You can merge documents based on a vector and then takes the sum of feature frequencies.
+
+```{r}
+#-- Inaugural Speech corpus
+# we skipped the corpus() then tokens() step here
+# as you can find the corpus by typing data_<tab>
+
+inaug_tokens = tokens(data_corpus_inaugural)
+
+inaug_dfm = dfm(inaug_tokens)
+# head(inaug_dfm)
+
+# group by Party
+dfm_group_party = dfm_group(inaug_dfm, groups = Party)
+
+head(dfm_group_party)
+
+docvars(dfm_group_party)
+```
 
 
 
 
 
+### FCM
+
+Feature co-occurrence matrix acts similar to dfm.
+You can construct a FCM from a DFM or a tokens object using `fcm()`. topfeatures() 
+returns the most frequently co-occuring words.
+
+
+```{r}
+# download news corpus
+corp_news = download("data_corpus_guardian")
+
+head(corp_news)
+```
+
+
+```{r}
+news_tokens = tokens(corp_news,
+                    remove_punct = T,
+                    remove_separators = T,
+                    remove_url = T)
+
+news_dfm = dfm(news_tokens) 
+
+news_dfm = dfm_remove(news_dfm , 
+                      pattern= c(stopwords("en"), "*-time", "updated-*", "gmt", "bst","|"))
+
+news_dfm_trim = dfm_trim(news_dfm, min_termfreq = 100)
+
+topfeatures(news_dfm_trim)
+```
 
 
 
 
+## Stat Analysis
 
 
-
-
+```{r}
+textstat_frequency(sotu_corpus_tokens_clean_dfm,
+                   n= 5,
+                   groups = President)
+```
 
 
 

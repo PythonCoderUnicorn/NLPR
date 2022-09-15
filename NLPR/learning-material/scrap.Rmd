@@ -1,0 +1,54 @@
+
+# scrapped code
+
+
+FCM
+
+```{r}
+news_fcm = fcm(news_dfm_trim)
+
+dim(news_fcm)
+
+topfeatures(news_fcm)
+```
+
+
+FCM network
+
+A FCM can be used to train word embedding models with the text2vec package, 
+or to visualize a semantic network analysis with `textplot_network()`.
+
+```{r}
+feat_names = names( topfeatures(news_dfm_trim, 50))
+
+
+
+news_fcm_trim_select = fcm_select(news_fcm,
+                                  pattern = feat_names,
+                                  selection = 'keep'
+                                  )
+dim(news_fcm_trim_select)
+
+
+news_dfm_select = dfm_select(news_dfm_trim, feat_names, selection = 'keep')
+
+size = log( colSums( news_dfm_select))
+```
+
+
+Graph
+
+The code to make a network graph is shown but does not run due to errors.
+
+```
+set.seed(144)
+
+textplot_network(
+  news_fcm_trim_select,
+  min_freq = 0.8,
+  vertex_size = size/max(size)*3,
+  vertex_color = 'grey70'
+) + 
+  ggdark::dark_mode()
+
+```

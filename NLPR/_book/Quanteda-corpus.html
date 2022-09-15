@@ -207,7 +207,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#document-feature-matrix" id="toc-document-feature-matrix" class="nav-link" data-scroll-target="#document-feature-matrix"> <span class="header-section-number">2.4</span> document-feature-matrix</a>
   <ul class="collapse">
   <li><a href="#dfm_keep" id="toc-dfm_keep" class="nav-link" data-scroll-target="#dfm_keep"> <span class="header-section-number">2.4.1</span> dfm_keep</a></li>
+  <li><a href="#dfm-group" id="toc-dfm-group" class="nav-link" data-scroll-target="#dfm-group"> <span class="header-section-number">2.4.2</span> dfm group</a></li>
+  <li><a href="#fcm" id="toc-fcm" class="nav-link" data-scroll-target="#fcm"> <span class="header-section-number">2.4.3</span> FCM</a></li>
   </ul></li>
+  <li><a href="#stat-analysis" id="toc-stat-analysis" class="nav-link" data-scroll-target="#stat-analysis"> <span class="header-section-number">2.5</span> Stat Analysis</a></li>
   </ul>
 </nav>
     </div>
@@ -1103,9 +1106,106 @@ docs               satisfaction opportunity now presents
 [ reached max_nfeat ... 8,238 more features ]</code></pre>
 </div>
 </div>
-
-
 </section>
+<section id="dfm-group" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="dfm-group"><span class="header-section-number">2.4.2</span> dfm group</h3>
+<p>You can merge documents based on a vector and then takes the sum of feature frequencies.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- Inaugural Speech corpus</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we skipped the corpus() then tokens() step here</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="co"># as you can find the corpus by typing data_&lt;tab&gt;</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>inaug_tokens <span class="ot">=</span> <span class="fu">tokens</span>(data_corpus_inaugural)</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>inaug_dfm <span class="ot">=</span> <span class="fu">dfm</span>(inaug_tokens)</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="co"># head(inaug_dfm)</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a><span class="co"># group by Party</span></span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>dfm_group_party <span class="ot">=</span> <span class="fu">dfm_group</span>(inaug_dfm, <span class="at">groups =</span> Party)</span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dfm_group_party)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 6 documents, 9,439 features (66.93% sparse) and 1 docvar.
+                       features
+docs                    fellow-citizens   of  the senate  and house
+  Democratic                          3 1994 2742      2 1728     4
+  Democratic-Republican              10  945 1416      0  640     0
+  Federalist                          3  140  163      1  130     0
+  none                                1   82  129      1   50     2
+  Republican                          9 3055 4408      5 2386     4
+  Whig                               13  964 1325      6  472     1
+                       features
+docs                    representatives  : among vicissitudes
+  Democratic                          3 54    25            3
+  Democratic-Republican               2  1    16            1
+  Federalist                          2  0     4            0
+  none                                2  2     1            1
+  Republican                          6 86    52            0
+  Whig                                4  1    10            0
+[ reached max_nfeat ... 9,429 more features ]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">docvars</span>(dfm_group_party)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Party
+1            Democratic
+2 Democratic-Republican
+3            Federalist
+4                  none
+5            Republican
+6                  Whig</code></pre>
+</div>
+</div>
+</section>
+<section id="fcm" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="fcm"><span class="header-section-number">2.4.3</span> FCM</h3>
+<p>Feature co-occurrence matrix acts similar to dfm. You can construct a FCM from a DFM or a tokens object using <code>fcm()</code>. topfeatures() returns the most frequently co-occuring words.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download news corpus</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>corp_news <span class="ot">=</span> <span class="fu">download</span>(<span class="st">"data_corpus_guardian"</span>)</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(corp_news)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 4 documents and 9 docvars.
+text136751 :
+"London masterclass on climate change | Do you want to unders..."
+
+text118588 :
+"As colourful fish were swimming past him off the Greek coast..."
+
+text45146 :
+"FTSE 100 | -101.35 | 6708.35 | FTSE All Share | -58.11 | 360..."
+
+text93623 :
+"Australia's education minister, Christopher Pyne, has vowed ..."</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>news_tokens <span class="ot">=</span> <span class="fu">tokens</span>(corp_news,</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">remove_punct =</span> T,</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">remove_separators =</span> T,</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">remove_url =</span> T)</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>news_dfm <span class="ot">=</span> <span class="fu">dfm</span>(news_tokens) </span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>news_dfm <span class="ot">=</span> <span class="fu">dfm_remove</span>(news_dfm , </span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">pattern=</span> <span class="fu">c</span>(<span class="fu">stopwords</span>(<span class="st">"en"</span>), <span class="st">"*-time"</span>, <span class="st">"updated-*"</span>, <span class="st">"gmt"</span>, <span class="st">"bst"</span>,<span class="st">"|"</span>))</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>news_dfm_trim <span class="ot">=</span> <span class="fu">dfm_trim</span>(news_dfm, <span class="at">min_termfreq =</span> <span class="dv">100</span>)</span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a><span class="fu">topfeatures</span>(news_dfm_trim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      said     people        one        new       also         us        can 
+     28412      11168       9879       8024       7901       7090       6972 
+government       year       last 
+      6821       6570       6335 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="stat-analysis" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="stat-analysis"><span class="header-section-number">2.5</span> Stat Analysis</h2>
+
+
 </section>
 
 </main> <!-- /main -->
