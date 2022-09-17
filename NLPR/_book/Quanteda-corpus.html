@@ -210,7 +210,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#dfm-group" id="toc-dfm-group" class="nav-link" data-scroll-target="#dfm-group"> <span class="header-section-number">2.4.2</span> dfm group</a></li>
   <li><a href="#fcm" id="toc-fcm" class="nav-link" data-scroll-target="#fcm"> <span class="header-section-number">2.4.3</span> FCM</a></li>
   </ul></li>
-  <li><a href="#stat-analysis" id="toc-stat-analysis" class="nav-link" data-scroll-target="#stat-analysis"> <span class="header-section-number">2.5</span> Stat Analysis</a></li>
+  <li><a href="#stat-analysis" id="toc-stat-analysis" class="nav-link" data-scroll-target="#stat-analysis"> <span class="header-section-number">2.5</span> Stat Analysis</a>
+  <ul class="collapse">
+  <li><a href="#lexical-diversity" id="toc-lexical-diversity" class="nav-link" data-scroll-target="#lexical-diversity"> <span class="header-section-number">2.5.1</span> lexical diversity</a></li>
+  <li><a href="#document-feature-similarity" id="toc-document-feature-similarity" class="nav-link" data-scroll-target="#document-feature-similarity"> <span class="header-section-number">2.5.2</span> document feature similarity</a></li>
+  <li><a href="#relative-frequency-analysis" id="toc-relative-frequency-analysis" class="nav-link" data-scroll-target="#relative-frequency-analysis"> <span class="header-section-number">2.5.3</span> relative frequency analysis</a></li>
+  <li><a href="#collocation-analysis" id="toc-collocation-analysis" class="nav-link" data-scroll-target="#collocation-analysis"> <span class="header-section-number">2.5.4</span> collocation analysis</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1204,8 +1210,102 @@ government       year       last
 </section>
 <section id="stat-analysis" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="stat-analysis"><span class="header-section-number">2.5</span> Stat Analysis</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>sotu_statfreq <span class="ot">=</span> <span class="fu">textstat_frequency</span>(sotu_corpus_tokens_clean_dfm,</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n=</span> <span class="dv">5</span>,</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">groups =</span> President)</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( sotu_statfreq )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     feature frequency rank docfreq  group
+1     states       194    1       8  Adams
+2     united       175    2       8  Adams
+3       upon       165    3       6  Adams
+4   congress       143    4       8  Adams
+5        may       123    5       8  Adams
+6 government       185    1       4 Arthur</code></pre>
+</div>
+</div>
+<section id="lexical-diversity" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="lexical-diversity"><span class="header-section-number">2.5.1</span> lexical diversity</h3>
+<p><code>textstat_lexdiv()</code> calculates various lexical diversity measures based on the number of unique types of tokens and the length of a document. It is useful, for instance, for analyzing speakers’ or writers’ linguistic skills, or the complexity of ideas expressed in documents.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>inaug_tokens_dfm <span class="ot">=</span> <span class="fu">dfm</span>(inaug_tokens) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_remove</span>(<span class="fu">stopwords</span>(<span class="st">'en'</span>))</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="co"># inaug_tokens_dfm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>inaug_lexdiv <span class="ot">=</span> <span class="fu">textstat_lexdiv</span>( inaug_tokens_dfm ) </span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( inaug_lexdiv )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         document       TTR
+1 1789-Washington 0.7806748
+2 1793-Washington 0.9354839
+3      1797-Adams 0.6542056
+4  1801-Jefferson 0.7293973
+5  1805-Jefferson 0.6726014
+6    1809-Madison 0.8326996</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(inaug_lexdiv<span class="sc">$</span>TTR, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>, <span class="at">xlab =</span> <span class="cn">NULL</span>, <span class="at">ylab =</span> <span class="st">"TTR"</span>)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>()</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(inaug_lexdiv)), <span class="at">labels =</span> inaug_dfm<span class="sc">$</span>President )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Quanteda-corpus_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="document-feature-similarity" class="level3" data-number="2.5.2">
+<h3 data-number="2.5.2" class="anchored" data-anchor-id="document-feature-similarity"><span class="header-section-number">2.5.2</span> document feature similarity</h3>
+<p><code>textstat_dist()</code> calculates similarities of documents or features for various measures. Its output is compatible with R’s <code>dist()</code>, so hierarchical clustering can be performed without any transformation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>inaug_dfm_dist <span class="ot">=</span> <span class="fu">as.dist</span>( inaug_tokens_dfm )  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in as.dist.default(inaug_tokens_dfm): non-square matrix</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>inaug_clustering <span class="ot">=</span> <span class="fu">hclust</span>( inaug_dfm_dist )</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( inaug_clustering, <span class="at">xlab=</span> <span class="st">"Distance"</span>, <span class="at">ylab=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Quanteda-corpus_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="relative-frequency-analysis" class="level3" data-number="2.5.3">
+<h3 data-number="2.5.3" class="anchored" data-anchor-id="relative-frequency-analysis"><span class="header-section-number">2.5.3</span> relative frequency analysis</h3>
+<p>Also known as keyness, Keyness is a signed two-by-two association scores originally implemented in WordSmith to identify frequent words in documents in a target and reference group.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>sotu_keyness <span class="ot">=</span> <span class="fu">textstat_keyness</span>( sotu_corpus_dfm ) </span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_keyness</span>( sotu_keyness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Quanteda-corpus_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="collocation-analysis" class="level3" data-number="2.5.4">
+<h3 data-number="2.5.4" class="anchored" data-anchor-id="collocation-analysis"><span class="header-section-number">2.5.4</span> collocation analysis</h3>
+<p>A collocation analysis allows us to identify contiguous collocations of words. One of the most common types of multi-word expressions are proper names, which can be identified simply based on capitalization in English texts.</p>
+<p>Example from Quanteda, not run here.</p>
+<pre><code>
+corp_news &lt;- download("data_corpus_guardian")
 
 
+toks_news &lt;- tokens(corp_news, remove_punct = TRUE)
+
+tstat_col_caps &lt;- tokens_select(toks_news, pattern = "^[A-Z]", 
+                                valuetype = "regex", 
+                                case_insensitive = FALSE, 
+                                padding = TRUE) %&gt;% 
+                  textstat_collocations(min_count = 100)
+                  
+head(tstat_col_caps, 20)</code></pre>
+
+
+</section>
 </section>
 
 </main> <!-- /main -->

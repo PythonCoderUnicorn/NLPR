@@ -1,4 +1,16 @@
 
+
+<!-- Converting to and from Document-Term Matrix and Corpus objects -->
+https://cran.r-project.org/web/packages/tidytext/vignettes/tidying_casting.html
+
+
+
+
+
+
+
+
+
 # scrapped code
 
 
