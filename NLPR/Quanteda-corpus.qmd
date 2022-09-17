@@ -748,14 +748,78 @@ head(tstat_col_caps, 20)
 
 
 
+## Advanced Operations
+
+We can compute the similarities between authors by grouping their documents and comparing them with all other authors.
+
+```{r}
+twitter_df = read_csv2("./TorontoTweetsText.csv")
+
+head(twitter_df)
+```
 
 
+construct a corpus 
+
+```{r}
+twitter_corpus = corpus(twitter_df)
+
+head(twitter_corpus)
+```
 
 
+Construct a document-feature matrix, and remove tags, links, and English stopwords.
+
+```{r}
+twitter_dfm = twitter_corpus %>% 
+  # tokenize and clean text
+  tokens(remove_punct = TRUE,
+         remove_symbols = TRUE,
+         remove_url = TRUE,
+         remove_separators = TRUE) %>% 
+  # make it into a dfm
+  dfm() %>% 
+  # remove stopwords
+  dfm_remove(stopwords("en")) %>% 
+  # extra string cleaning
+  dfm_remove(pattern= c("#*","@*", "rt","RT","H/T","h/t",".com",".ca","amp"))
 
 
+head(twitter_dfm)
+  
+```
 
 
+see top features
+
+```{r}
+topfeatures( twitter_dfm )
+```
+
+
+The Twitter data used in this section has only the text of the tweets. If the full data file
+containing screen names, then this function would work, which allows for clustering users in a dendrogram.
+
+```{}
+# --- group twitter users by screen name
+twitter_dfm_groups = dfm_group(twitter_dfm, groups = screen_name)
+
+#--- select tweets that meet a criteria
+#     remove tweets where frequency < 10 and tweets with >50 tokens in total
+
+twitter_select = twitter_dfm_groups %>% 
+    dfm_select( min_nchar = 2) %>% 
+    dfm_trim( min_termfreq = 10)
+    
+twitter_select = twitter_select[ ntoken( twitter_select ) > 50 , ]
+
+#-- clustering
+
+twitter_dist = as.dist(  textstat_dist( twitter_select ))
+twitter_clust = hclust( twitter_dist )
+
+plot( twitter_clust )
+```
 
 
 
