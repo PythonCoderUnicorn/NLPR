@@ -1,6 +1,9 @@
 
 # Quanteda 
 
+The content in the section has most of the content from Quanteda's tutorials, with each section adapted to be similar but different. Some topics are not covered in this section such as Wordfish, Regular regression classifier, Topic Models, etc. as to not reproduce a full tutorial series but to show main parts of the library.
+
+
 This section is for the Quanteda tutorials, which has 3 components (object types).
 
 The 3 object types:
@@ -798,14 +801,14 @@ topfeatures( twitter_dfm )
 
 
 The Twitter data used in this section has only the text of the tweets. If the full data file
-containing screen names, then this function would work, which allows for clustering users in a dendrogram.
+containing screen names, then the following would work, which allows for clustering users in a dendrogram.
 
 ```{}
 # --- group twitter users by screen name
 twitter_dfm_groups = dfm_group(twitter_dfm, groups = screen_name)
 
 #--- select tweets that meet a criteria
-#     remove tweets where frequency < 10 and tweets with >50 tokens in total
+#     remove tweets with a frequency < 10 and tweets with >50 tokens in total
 
 twitter_select = twitter_dfm_groups %>% 
     dfm_select( min_nchar = 2) %>% 
@@ -823,6 +826,171 @@ plot( twitter_clust )
 
 
 
+
+
+### multi-word expressions
+
+We can compound multi-word expressions through collocation analysis. 
+
+```{r}
+text = c("Everyone loves New York!", "The home office of Barak Obama was in the White House.", "European Union is also known as the EU.","Soon it will be Black Friday, crazy time.")
+
+text
+```
+
+now tokenize the text and clean the text
+
+```{r}
+text_corpus = corpus(text)
+
+text_tokens = tokens(text_corpus, 
+                     remove_punct = T, 
+                     remove_separators = T) %>% 
+  tokens_remove(stopwords("en"))
+
+text_tokens
+```
+
+
+One of the most common type of multi-word expressions is proper names, which we can select simply based on capitalization in English texts.
+
+```{}
+# this text example is too small to run but the code is valid
+
+text_tokens2 = tokens_select(text_tokens,
+              pattern = "^[A-Z]",
+              valuetype = "regex",
+              case_insensitive = FALSE
+              )
+
+text_collocat = textstat_collocations( text_tokens2, tolower = FALSE)
+
+tokens_compound(text_tokens, pattern = text_collocat[ text_collocat$z > 3])
+```
+
+once you have all your tokens compounded, you can search where they are in the corpus.
+
+```{r}
+# this is an imperfect example but shows the steps to use in large corpus
+
+kwic(text_tokens, pattern = "Barak")
+```
+
+
+
+
+### related keywords
+
+We can identify related words of keywords based on their distance in the documents. 
+
+Just a reminder of steps for a corpus to be ready for the `textstat_keyness()`
+
+- tokenize a corpus with `tokens()`
+- clean tokens `tokens_remove()`
+- transform tokens into a `dfm()`
+
+```{r}
+inaug_keyness = textstat_keyness( inaug_tokens_dfm )
+
+head(inaug_keyness)
+```
+
+
+
+
+### Naive Bayes classifier
+
+Naive Bayes is a supervised model usually used to classify documents into two or more categories. We train the classifier using class labels attached to documents, and predict the most likely class(es) of new unlabeled documents.
+
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages('caret')
+library(caret)
+
+movie_review = corpus(data_corpus_moviereviews)
+
+# head(movie_review)
+
+summary(movie_review, 5)
+
+```
+
+
+The variable “Sentiment” indicates whether a movie review was classified as positive or negative. In this example we use 1500 reviews as the training set and build a Naive Bayes classifier based on this subset. In a second step, we predict the sentiment for the remaining reviews (our test set).
+
+```{r}
+set.seed(300)
+
+id_train = sample(1:2000, 1500, replace = FALSE)
+
+head(id_train)
+```
+
+```{r}
+# create docvar with id
+movie_review$id_num = 1:ndoc(movie_review)
+
+# tokenize texts
+movie_review_tokens = tokens(movie_review,
+                             remove_punct = T,
+                             remove_numbers = T) %>% 
+  tokens_remove(stopwords("en")) %>% 
+  tokens_wordstem()
+
+# movie review dfm
+movie_review_dfm = dfm(movie_review_tokens)
+
+# TRAINING SET
+movie_training = dfm_subset(movie_review_dfm, id_num %in% id_train)
+
+# TEST SET 
+movie_test = dfm_subset(movie_review_dfm, !id_num %in% id_train)
+```
+
+
+
+Naive Bayes 
+
+```{r}
+movie_naiveBayes = textmodel_nb(movie_training, movie_training$sentiment)
+
+summary(movie_naiveBayes)
+```
+
+
+Naive Bayes can only take features into consideration that occur both in the training set and the test set, but we can make the features identical using dfm_match()
+
+```{r}
+movie_dfm_match = dfm_match(movie_test, features = featnames(movie_training))
+```
+
+inspect the classification model
+
+```{r}
+movie_actual_class = movie_dfm_match$sentiment
+
+movie_predicted_class = predict( movie_naiveBayes, newdata = movie_dfm_match )
+
+movie_class_matrix = table( movie_actual_class, movie_predicted_class)
+
+movie_class_matrix
+```
+
+From the cross-table we see that the number of false positives and false negatives is similar. The classifier made mistakes in both directions, but does not seem to over- or underestimate one class.
+
+
+```{r}
+caret::confusionMatrix(
+  movie_class_matrix,
+  mode= "everything",
+  positive= "pos"
+)
+```
+
+
+
+---
+ End of Quanteda section
 
 
 

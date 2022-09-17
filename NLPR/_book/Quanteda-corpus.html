@@ -217,6 +217,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#relative-frequency-analysis" id="toc-relative-frequency-analysis" class="nav-link" data-scroll-target="#relative-frequency-analysis"> <span class="header-section-number">2.5.3</span> relative frequency analysis</a></li>
   <li><a href="#collocation-analysis" id="toc-collocation-analysis" class="nav-link" data-scroll-target="#collocation-analysis"> <span class="header-section-number">2.5.4</span> collocation analysis</a></li>
   </ul></li>
+  <li><a href="#advanced-operations" id="toc-advanced-operations" class="nav-link" data-scroll-target="#advanced-operations"> <span class="header-section-number">2.6</span> Advanced Operations</a>
+  <ul class="collapse">
+  <li><a href="#multi-word-expressions" id="toc-multi-word-expressions" class="nav-link" data-scroll-target="#multi-word-expressions"> <span class="header-section-number">2.6.1</span> multi-word expressions</a></li>
+  <li><a href="#related-keywords" id="toc-related-keywords" class="nav-link" data-scroll-target="#related-keywords"> <span class="header-section-number">2.6.2</span> related keywords</a></li>
+  <li><a href="#naive-bayes-classifier" id="toc-naive-bayes-classifier" class="nav-link" data-scroll-target="#naive-bayes-classifier"> <span class="header-section-number">2.6.3</span> Naive Bayes classifier</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -241,6 +247,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
+<p>The content in the section has most of the content from Quanteda’s tutorials, with each section adapted to be similar but different. Some topics are not covered in this section such as Wordfish, Regular regression classifier, Topic Models, etc. as to not reproduce a full tutorial series but to show main parts of the library.</p>
 <p>This section is for the Quanteda tutorials, which has 3 components (object types).</p>
 <p>The 3 object types:</p>
 <ol type="1">
@@ -1303,6 +1310,356 @@ tstat_col_caps &lt;- tokens_select(toks_news, pattern = "^[A-Z]",
                   textstat_collocations(min_count = 100)
                   
 head(tstat_col_caps, 20)</code></pre>
+</section>
+</section>
+<section id="advanced-operations" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="advanced-operations"><span class="header-section-number">2.6</span> Advanced Operations</h2>
+<p>We can compute the similarities between authors by grouping their documents and comparing them with all other authors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>twitter_df <span class="ot">=</span> <span class="fu">read_csv2</span>(<span class="st">"./TorontoTweetsText.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Using "','" as decimal and "'.'" as grouping mark. Use `read_delim()` for more control.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 7985 Columns: 1
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+chr (1): text
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(twitter_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 1
+  text                                                                          
+  &lt;chr&gt;                                                                         
+1 "📌 @mlleperez\n#Toronto #TheSix #EstudiaenCanadá🇨🇦 https://t.co/FzjSa3PhDv"  
+2 "September marks a huge milestone @DistilleryTO …190 years old! Come explore …
+3 "The average home price rising again in Toronto.\nhttps://t.co/NjHh7B5Odo\n#t…
+4 "Sault News: Real estate prices expected to remain stable | CTV News\nhttps:/…
+5 "Saturday vibes! #Toronto https://t.co/RKEosXP6X7"                            
+6 "#Toronto head over to #BloorWest to support #Ukraine️ this afternoon! https:/…</code></pre>
+</div>
+</div>
+<p>construct a corpus</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>twitter_corpus <span class="ot">=</span> <span class="fu">corpus</span>(twitter_df)</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(twitter_corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 6 documents.
+text1 :
+"📌 @mlleperez #Toronto #TheSix #EstudiaenCanadá🇨🇦 https://t.c..."
+
+text2 :
+"September marks a huge milestone @DistilleryTO …190 years ol..."
+
+text3 :
+"The average home price rising again in Toronto. https://t.co..."
+
+text4 :
+"Sault News: Real estate prices expected to remain stable | C..."
+
+text5 :
+"Saturday vibes! #Toronto https://t.co/RKEosXP6X7"
+
+text6 :
+"#Toronto head over to #BloorWest to support #Ukraine️ this a..."</code></pre>
+</div>
+</div>
+<p>Construct a document-feature matrix, and remove tags, links, and English stopwords.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>twitter_dfm <span class="ot">=</span> twitter_corpus <span class="sc">%&gt;%</span> </span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tokenize and clean text</span></span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens</span>(<span class="at">remove_punct =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_symbols =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_url =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_separators =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make it into a dfm</span></span>
+<span id="cb95-8"><a href="#cb95-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb95-9"><a href="#cb95-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove stopwords</span></span>
+<span id="cb95-10"><a href="#cb95-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_remove</span>(<span class="fu">stopwords</span>(<span class="st">"en"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb95-11"><a href="#cb95-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># extra string cleaning</span></span>
+<span id="cb95-12"><a href="#cb95-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_remove</span>(<span class="at">pattern=</span> <span class="fu">c</span>(<span class="st">"#*"</span>,<span class="st">"@*"</span>, <span class="st">"rt"</span>,<span class="st">"RT"</span>,<span class="st">"H/T"</span>,<span class="st">"h/t"</span>,<span class="st">".com"</span>,<span class="st">".ca"</span>,<span class="st">"amp"</span>))</span>
+<span id="cb95-13"><a href="#cb95-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-14"><a href="#cb95-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-15"><a href="#cb95-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(twitter_dfm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 6 documents, 16,469 features (99.96% sparse) and 0 docvars.
+       features
+docs    🇨🇦 september marks huge milestone 190 years old come explore
+  text1  1         0     0    0         0   0     0   0    0       0
+  text2  0         1     1    1         1   1     1   1    1       1
+  text3  0         0     0    0         0   0     0   0    0       0
+  text4  0         0     0    0         0   0     0   0    0       0
+  text5  0         0     0    0         0   0     0   0    0       0
+  text6  0         0     0    0         0   0     0   0    0       0
+[ reached max_nfeat ... 16,459 more features ]</code></pre>
+</div>
+</div>
+<p>see top features</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">topfeatures</span>( twitter_dfm )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>toronto  reggae  canada     new    best     now    live       h    2022   today 
+   1337     503     477     391     376     371     355     346     340     326 </code></pre>
+</div>
+</div>
+<p>The Twitter data used in this section has only the text of the tweets. If the full data file containing screen names, then the following would work, which allows for clustering users in a dendrogram.</p>
+<pre><code># --- group twitter users by screen name
+twitter_dfm_groups = dfm_group(twitter_dfm, groups = screen_name)
+
+#--- select tweets that meet a criteria
+#     remove tweets with a frequency &lt; 10 and tweets with &gt;50 tokens in total
+
+twitter_select = twitter_dfm_groups %&gt;% 
+    dfm_select( min_nchar = 2) %&gt;% 
+    dfm_trim( min_termfreq = 10)
+    
+twitter_select = twitter_select[ ntoken( twitter_select ) &gt; 50 , ]
+
+#-- clustering
+
+twitter_dist = as.dist(  textstat_dist( twitter_select ))
+twitter_clust = hclust( twitter_dist )
+
+plot( twitter_clust )</code></pre>
+<section id="multi-word-expressions" class="level3" data-number="2.6.1">
+<h3 data-number="2.6.1" class="anchored" data-anchor-id="multi-word-expressions"><span class="header-section-number">2.6.1</span> multi-word expressions</h3>
+<p>We can compound multi-word expressions through collocation analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>text <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Everyone loves New York!"</span>, <span class="st">"The home office of Barak Obama was in the White House."</span>, <span class="st">"European Union is also known as the EU."</span>,<span class="st">"Soon it will be Black Friday, crazy time."</span>)</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Everyone loves New York!"                              
+[2] "The home office of Barak Obama was in the White House."
+[3] "European Union is also known as the EU."               
+[4] "Soon it will be Black Friday, crazy time."             </code></pre>
+</div>
+</div>
+<p>now tokenize the text and clean the text</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>text_corpus <span class="ot">=</span> <span class="fu">corpus</span>(text)</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>text_tokens <span class="ot">=</span> <span class="fu">tokens</span>(text_corpus, </span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">remove_punct =</span> T, </span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">remove_separators =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_remove</span>(<span class="fu">stopwords</span>(<span class="st">"en"</span>))</span>
+<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-8"><a href="#cb102-8" aria-hidden="true" tabindex="-1"></a>text_tokens</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 4 documents.
+text1 :
+[1] "Everyone" "loves"    "New"      "York"    
+
+text2 :
+[1] "home"   "office" "Barak"  "Obama"  "White"  "House" 
+
+text3 :
+[1] "European" "Union"    "also"     "known"    "EU"      
+
+text4 :
+[1] "Soon"   "Black"  "Friday" "crazy"  "time"  </code></pre>
+</div>
+</div>
+<p>One of the most common type of multi-word expressions is proper names, which we can select simply based on capitalization in English texts.</p>
+<pre><code># this text example is too small to run but the code is valid
+
+text_tokens2 = tokens_select(text_tokens,
+              pattern = "^[A-Z]",
+              valuetype = "regex",
+              case_insensitive = FALSE
+              )
+
+text_collocat = textstat_collocations( text_tokens2, tolower = FALSE)
+
+tokens_compound(text_tokens, pattern = text_collocat[ text_collocat$z &gt; 3])</code></pre>
+<p>once you have all your tokens compounded, you can search where they are in the corpus.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is an imperfect example but shows the steps to use in large corpus</span></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(text_tokens, <span class="at">pattern =</span> <span class="st">"Barak"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 1 match.                                                   
+ [text2, 3] home office | Barak | Obama White House</code></pre>
+</div>
+</div>
+</section>
+<section id="related-keywords" class="level3" data-number="2.6.2">
+<h3 data-number="2.6.2" class="anchored" data-anchor-id="related-keywords"><span class="header-section-number">2.6.2</span> related keywords</h3>
+<p>We can identify related words of keywords based on their distance in the documents.</p>
+<p>Just a reminder of steps for a corpus to be ready for the <code>textstat_keyness()</code></p>
+<ul>
+<li>tokenize a corpus with <code>tokens()</code></li>
+<li>clean tokens <code>tokens_remove()</code></li>
+<li>transform tokens into a <code>dfm()</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>inaug_keyness <span class="ot">=</span> <span class="fu">textstat_keyness</span>( inaug_tokens_dfm )</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(inaug_keyness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        feature     chi2            p n_target n_reference
+1     immutable 76.44488 0.000000e+00        2           1
+2   impressions 76.44488 0.000000e+00        2           1
+3  providential 76.44488 0.000000e+00        2           1
+4 deliberations 36.75264 1.341089e-09        2           4
+5    peculiarly 36.75264 1.341089e-09        2           4
+6     pecuniary 36.75264 1.341089e-09        2           4</code></pre>
+</div>
+</div>
+</section>
+<section id="naive-bayes-classifier" class="level3" data-number="2.6.3">
+<h3 data-number="2.6.3" class="anchored" data-anchor-id="naive-bayes-classifier"><span class="header-section-number">2.6.3</span> Naive Bayes classifier</h3>
+<p>Naive Bayes is a supervised model usually used to classify documents into two or more categories. We train the classifier using class labels attached to documents, and predict the most likely class(es) of new unlabeled documents.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages('caret')</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>movie_review <span class="ot">=</span> <span class="fu">corpus</span>(data_corpus_moviereviews)</span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a><span class="co"># head(movie_review)</span></span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-8"><a href="#cb109-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(movie_review, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 2000 documents, showing 5 documents:
+
+            Text Types Tokens Sentences sentiment   id1   id2
+ cv000_29416.txt   354    841         9       neg cv000 29416
+ cv001_19502.txt   156    278         1       neg cv001 19502
+ cv002_17424.txt   276    553         3       neg cv002 17424
+ cv003_12683.txt   313    555         2       neg cv003 12683
+ cv004_12641.txt   380    841         2       neg cv004 12641</code></pre>
+</div>
+</div>
+<p>The variable “Sentiment” indicates whether a movie review was classified as positive or negative. In this example we use 1500 reviews as the training set and build a Naive Bayes classifier based on this subset. In a second step, we predict the sentiment for the remaining reviews (our test set).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">300</span>)</span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>id_train <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2000</span>, <span class="dv">1500</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(id_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  590  874 1602  985 1692  789</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create docvar with id</span></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>movie_review<span class="sc">$</span>id_num <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ndoc</span>(movie_review)</span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a><span class="co"># tokenize texts</span></span>
+<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a>movie_review_tokens <span class="ot">=</span> <span class="fu">tokens</span>(movie_review,</span>
+<span id="cb113-6"><a href="#cb113-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">remove_punct =</span> T,</span>
+<span id="cb113-7"><a href="#cb113-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">remove_numbers =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb113-8"><a href="#cb113-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_remove</span>(<span class="fu">stopwords</span>(<span class="st">"en"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb113-9"><a href="#cb113-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_wordstem</span>()</span>
+<span id="cb113-10"><a href="#cb113-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-11"><a href="#cb113-11" aria-hidden="true" tabindex="-1"></a><span class="co"># movie review dfm</span></span>
+<span id="cb113-12"><a href="#cb113-12" aria-hidden="true" tabindex="-1"></a>movie_review_dfm <span class="ot">=</span> <span class="fu">dfm</span>(movie_review_tokens)</span>
+<span id="cb113-13"><a href="#cb113-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-14"><a href="#cb113-14" aria-hidden="true" tabindex="-1"></a><span class="co"># TRAINING SET</span></span>
+<span id="cb113-15"><a href="#cb113-15" aria-hidden="true" tabindex="-1"></a>movie_training <span class="ot">=</span> <span class="fu">dfm_subset</span>(movie_review_dfm, id_num <span class="sc">%in%</span> id_train)</span>
+<span id="cb113-16"><a href="#cb113-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-17"><a href="#cb113-17" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TEST</span><span class="co"> SET </span></span>
+<span id="cb113-18"><a href="#cb113-18" aria-hidden="true" tabindex="-1"></a>movie_test <span class="ot">=</span> <span class="fu">dfm_subset</span>(movie_review_dfm, <span class="sc">!</span>id_num <span class="sc">%in%</span> id_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Naive Bayes</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>movie_naiveBayes <span class="ot">=</span> <span class="fu">textmodel_nb</span>(movie_training, movie_training<span class="sc">$</span>sentiment)</span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(movie_naiveBayes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+textmodel_nb.dfm(x = movie_training, y = movie_training$sentiment)
+
+Class Priors:
+(showing first 2 elements)
+neg pos 
+0.5 0.5 
+
+Estimated Feature Scores:
+        plot      two      teen     coupl       go    church     parti
+neg 0.002579 0.002318 0.0002870 0.0007157 0.002663 8.719e-05 0.0002652
+pos 0.001507 0.002338 0.0001656 0.0005456 0.002348 8.768e-05 0.0002728
+        drink     drive      get     accid      one       guy       die
+neg 1.199e-04 0.0003052 0.004486 9.445e-05 0.007389 0.0014458 0.0005485
+pos 9.417e-05 0.0002630 0.003783 1.851e-04 0.007355 0.0009937 0.0005488
+    girlfriend   continu      see     life  nightmar      deal    watch
+neg  0.0003124 0.0003161 0.002557 0.001435 0.0001199 0.0004323 0.001642
+pos  0.0002338 0.0003215 0.003020 0.002497 0.0001202 0.0005196 0.001539
+        movi     sorta     find   critiqu mind-fuck   generat     touch
+neg 0.010117 1.090e-05 0.001453 9.445e-05 3.633e-06 0.0002652 0.0002289
+pos 0.007657 1.624e-05 0.001630 8.443e-05 3.247e-06 0.0002923 0.0004449
+         cool      idea
+neg 0.0003052 0.0008210
+pos 0.0002273 0.0005845</code></pre>
+</div>
+</div>
+<p>Naive Bayes can only take features into consideration that occur both in the training set and the test set, but we can make the features identical using dfm_match()</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>movie_dfm_match <span class="ot">=</span> <span class="fu">dfm_match</span>(movie_test, <span class="at">features =</span> <span class="fu">featnames</span>(movie_training))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>inspect the classification model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>movie_actual_class <span class="ot">=</span> movie_dfm_match<span class="sc">$</span>sentiment</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>movie_predicted_class <span class="ot">=</span> <span class="fu">predict</span>( movie_naiveBayes, <span class="at">newdata =</span> movie_dfm_match )</span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a>movie_class_matrix <span class="ot">=</span> <span class="fu">table</span>( movie_actual_class, movie_predicted_class)</span>
+<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a>movie_class_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  movie_predicted_class
+movie_actual_class neg pos
+               neg 213  45
+               pos  37 205</code></pre>
+</div>
+</div>
+<p>From the cross-table we see that the number of false positives and false negatives is similar. The classifier made mistakes in both directions, but does not seem to over- or underestimate one class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(</span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>  movie_class_matrix,</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode=</span> <span class="st">"everything"</span>,</span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">positive=</span> <span class="st">"pos"</span></span>
+<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+                  movie_predicted_class
+movie_actual_class neg pos
+               neg 213  45
+               pos  37 205
+                                          
+               Accuracy : 0.836           
+                 95% CI : (0.8006, 0.8674)
+    No Information Rate : 0.5             
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
+                                          
+                  Kappa : 0.672           
+                                          
+ Mcnemar's Test P-Value : 0.4395          
+                                          
+            Sensitivity : 0.8200          
+            Specificity : 0.8520          
+         Pos Pred Value : 0.8471          
+         Neg Pred Value : 0.8256          
+              Precision : 0.8471          
+                 Recall : 0.8200          
+                     F1 : 0.8333          
+             Prevalence : 0.5000          
+         Detection Rate : 0.4100          
+   Detection Prevalence : 0.4840          
+      Balanced Accuracy : 0.8360          
+                                          
+       'Positive' Class : pos             
+                                          </code></pre>
+</div>
+</div>
+<hr>
+<p>End of Quanteda section</p>
 
 
 </section>
