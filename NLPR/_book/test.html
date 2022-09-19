@@ -2,39 +2,108 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.334">
+<meta name="generator" content="quarto-1.1.251">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>NLPR - 2&nbsp; Testing Rmd</title>
+<title>NLPR - 4&nbsp; Testing Rmd</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-span.underline{text-decoration: underline;}
-div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
-<meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
 <link href="./summary.html" rel="next">
-<link href="./intro.html" rel="prev">
+<link href="./TidyText.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link id="quarto-text-highlighting-styles" href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -58,13 +127,13 @@ ul.task-list{list-style: none;}
 
 </head>
 
-<body class="floating">
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Testing Rmd</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Testing Rmd</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -99,12 +168,22 @@ ul.task-list{list-style: none;}
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./test.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Testing Rmd</span></a>
+  <a href="./Quanteda-corpus.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Quanteda</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  <a href="./TidyText.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">TidyText</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./test.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Testing Rmd</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -124,10 +203,8 @@ ul.task-list{list-style: none;}
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Testing Rmd</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Testing Rmd</span></h1>
 </div>
-
-
 
 
 
@@ -141,12 +218,419 @@ ul.task-list{list-style: none;}
 </header>
 
 <p>this is a test of Rmd inside a Quarto book</p>
+<p>https://cran.r-project.org/web/packages/tidytext/tidytext.pdf</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+✔ ggplot2 3.3.6      ✔ purrr   0.3.4 
+✔ tibble  3.1.8      ✔ dplyr   1.0.10
+✔ tidyr   1.2.0      ✔ stringr 1.4.0 
+✔ readr   2.1.1      ✔ forcats 0.5.1 
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gutenbergr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>look for a book by title name</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gutenberg_metadata <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(title <span class="sc">==</span> <span class="st">"The Iliad"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 8
+  gutenberg_id title     author gutenberg_autho…¹ langu…² guten…³ rights has_t…⁴
+         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;              &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;lgl&gt;  
+1         2199 The Iliad Homer                705 en      Classi… Publi… TRUE   
+2         3059 The Iliad Homer                705 en      Classi… Publi… TRUE   
+3         6130 The Iliad Homer                705 en      Classi… Publi… TRUE   
+4         6150 The Iliad Homer                705 en      Classi… Publi… TRUE   
+# … with abbreviated variable names ¹​gutenberg_author_id, ²​language,
+#   ³​gutenberg_bookshelf, ⁴​has_text</code></pre>
+</div>
+</div>
+<p>find works by author</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(author <span class="sc">==</span> <span class="st">"Carroll, Lewis"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 18 × 8
+   gutenberg_id title              author guten…¹ langu…² guten…³ rights has_t…⁴
+          &lt;int&gt; &lt;chr&gt;              &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;lgl&gt;  
+ 1           11 "Alice's Adventur… Carro…       7 en      Childr… Publi… TRUE   
+ 2           12 "Through the Look… Carro…       7 en      Childr… Publi… TRUE   
+ 3           13 "The Hunting of t… Carro…       7 en      Childr… Publi… TRUE   
+ 4          620 "Sylvie and Bruno" Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+ 5          651 "Phantasmagoria a… Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+ 6         4763 "The Game of Logi… Carro…       7 en      Philos… Publi… TRUE   
+ 7        19002 "Alice's Adventur… Carro…       7 en      Childr… Publi… TRUE   
+ 8        28696 "Symbolic Logic"   Carro…       7 en      Philos… Publi… TRUE   
+ 9        28885 "Alice's Adventur… Carro…       7 en      Banned… Publi… TRUE   
+10        29042 "A Tangled Tale"   Carro…       7 en      Mathem… Publi… TRUE   
+11        29888 "The Hunting of t… Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+12        33582 "Rhyme? And Reaso… Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+13        35497 "Three Sunsets an… Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+14        35535 "Feeding the Mind" Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+15        36308 "Songs From Alice… Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+16        38065 "Eight or Nine Wi… Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+17        48630 "Sylvie and Bruno… Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+18        48795 "Sylvie and Bruno… Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+# … with abbreviated variable names ¹​gutenberg_author_id, ²​language,
+#   ³​gutenberg_bookshelf, ⁴​has_text</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># or use </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">gutenberg_works</span>(<span class="fu">str_detect</span>(author, <span class="st">"Carroll"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 31 × 8
+   gutenberg_id title              author guten…¹ langu…² guten…³ rights has_t…⁴
+          &lt;int&gt; &lt;chr&gt;              &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;lgl&gt;  
+ 1           11 "Alice's Adventur… Carro…       7 en      Childr… Publi… TRUE   
+ 2           12 "Through the Look… Carro…       7 en      Childr… Publi… TRUE   
+ 3           13 "The Hunting of t… Carro…       7 en      Childr… Publi… TRUE   
+ 4          620 "Sylvie and Bruno" Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+ 5          651 "Phantasmagoria a… Carro…       7 en      &lt;NA&gt;    Publi… TRUE   
+ 6         4763 "The Game of Logi… Carro…       7 en      Philos… Publi… TRUE   
+ 7         5994 "Our Nervous Frie… Carro…    1906 en      Psycho… Publi… TRUE   
+ 8        16861 "The Wedge of Gol… Goodw…    6978 en      &lt;NA&gt;    Publi… TRUE   
+ 9        19002 "Alice's Adventur… Carro…       7 en      Childr… Publi… TRUE   
+10        23160 "Solomon's Orbit"  Carro…   25719 en      Scienc… Publi… TRUE   
+# … with 21 more rows, and abbreviated variable names ¹​gutenberg_author_id,
+#   ²​language, ³​gutenberg_bookshelf, ⁴​has_text</code></pre>
+</div>
+</div>
+<p>download a book by id</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>book_link <span class="ot">=</span> <span class="st">"https://www.gutenberg.org/cache/epub/174/pg174.txt"</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>book_file <span class="ot">=</span> <span class="fu">read_file</span>( book_link )</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>book_df <span class="ot">=</span> <span class="fu">tibble</span>( book_file )</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>book_tokens <span class="ot">=</span> book_df <span class="sc">%&gt;%</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(<span class="at">input =</span> book_file, <span class="at">output =</span> word)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>book_clean <span class="ot">=</span> book_tokens <span class="sc">%&gt;%</span> </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by=</span><span class="st">'word'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>book_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="fu">c</span>(<span class="st">"gutenberg"</span>,<span class="st">"project"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in word != c("gutenberg", "project"): longer object length is not a
+multiple of shorter object length</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6,748 × 2
+   word       n
+   &lt;chr&gt;  &lt;int&gt;
+ 1 dorian   414
+ 2 don’t    255
+ 3 lord     248
+ 4 life     230
+ 5 henry    223
+ 6 gray     193
+ 7 harry    174
+ 8 basil    153
+ 9 love     111
+10 time     110
+# … with 6,738 more rows</code></pre>
+</div>
+</div>
+<p>find the words in context</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in .recacheSubclasses(def@className, def, env): undefined subclass
+"packedMatrix" of class "mMatrix"; definition not updated</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in .recacheSubclasses(def@className, def, env): undefined subclass
+"packedMatrix" of class "replValueSp"; definition not updated</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Package version: 3.2.3
+Unicode version: 14.0
+ICU version: 70.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Parallel computing: 4 of 4 threads used.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>See https://quanteda.io for tutorials and examples.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>book_tokens_q <span class="ot">=</span> <span class="fu">tokens</span>(book_file)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>kwic_word <span class="ot">=</span> <span class="st">"love"</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(book_tokens_q, <span class="at">pattern=</span> kwic_word )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 109 matches.                                                     
+  [text1, 1973]            . I have grown to | love |
+  [text1, 5878]     only the trivial side of | love |
+ [text1, 12300]                  it? I am in | love |
+ [text1, 13117]               " Why, even in | love |
+ [text1, 16078]   fascinating in this son of | love |
+ [text1, 17265] quite invaluable. They would | love |
+ [text1, 19362]         . She was usually in | love |
+ [text1, 19818]             I am charmed, my | love |
+ [text1, 20103]             I am too much in | love |
+ [text1, 20133]             " Who are you in | love |
+ [text1, 21014]        you will always be in | love |
+ [text1, 21016]       always be in love with | love |
+ [text1, 21106]          boy, the people who | love |
+ [text1, 21879]           . Why should I not | love |
+ [text1, 21886]                ? Harry, I do | love |
+ [text1, 22401]             . When one is in | love |
+ [text1, 23519]            she has genius. I | love |
+ [text1, 23527]          and I must make her | love |
+ [text1, 23548]       to charm Sibyl Vane to | love |
+ [text1, 25342]      results. His sudden mad | love |
+ [text1, 25784]      what does money matter? | Love |
+ [text1, 25965]                her dress." I | love |
+ [text1, 26236]               ," why does he | love |
+ [text1, 26245]               ? I know why I | love |
+ [text1, 26249]                I love him. I | love |
+ [text1, 26256]      because he is like what | love |
+ [text1, 26309]            . Mother, did you | love |
+ [text1, 26314]          love my father as I | love |
+ [text1, 26430]       to think of falling in | love |
+ [text1, 27986]       she was producing. Her | love |
+ [text1, 28301]          , she would fall in | love |
+ [text1, 28494]   young dandy who was making | love |
+ [text1, 28843]      anything against him. I | love |
+ [text1, 28948]                     and I... | love |
+ [text1, 28990]                Jim, to be in | love |
+ [text1, 29024]               them. To be in | love |
+ [text1, 29113]              in at the door, | love |
+ [text1, 29268]           day you will be in | love |
+ [text1, 29804]       wish you would fall in | love |
+ [text1, 29806]          would fall in love. | Love |
+ [text1, 29957]         never harm any one I | love |
+ [text1, 29969]           Not as long as you | love |
+ [text1, 29984]             answer." I shall | love |
+ [text1, 30639]                it, who is in | love |
+ [text1, 31636]       . Dorian Gray falls in | love |
+ [text1, 32483]           I was away with my | love |
+ [text1, 32685]                I, to take my | love |
+ [text1, 33134]            thing he loves. I | love |
+ [text1, 33289]    life, your theories about | love |
+ [text1, 33873]        gravely." They create | love |
+ [text1, 34256]             may thrill me. I | love |
+ [text1, 34896]            girl. Any one you | love |
+ [text1, 35738]      good-night! This bud of | love |
+ [text1, 36033]       that about any one you | love |
+ [text1, 36037]            you love, Dorian. | Love |
+ [text1, 36806]           - oh, my beautiful | love |
+ [text1, 36941]  had made me understand what | love |
+ [text1, 36946]           love really is. My | love |
+ [text1, 36949]                . My love! My | love |
+ [text1, 37059]      What could they know of | love |
+ [text1, 37141]          to play at being in | love |
+ [text1, 37169]         " You have killed my | love |
+ [text1, 37249]         " you have killed my | love |
+ [text1, 37327]             how mad I was to | love |
+ [text1, 37417]       little you can know of | love |
+ [text1, 37661]       suddenly across me, my | love |
+ [text1, 37693]            Kiss me again, my | love |
+ [text1, 37767]             to me, because I | love |
+ [text1, 37888]       whom one has ceased to | love |
+ [text1, 39030]        artist, had given his | love |
+ [text1, 39267]         It had taught him to | love |
+ [text1, 39523]            marry her, try to | love |
+ [text1, 39670]          A faint echo of his | love |
+ [text1, 40863]     . His unreal and selfish | love |
+ [text1, 43393]   one has killed herself for | love |
+ [text1, 43414]        would have made me in | love |
+ [text1, 43416]         made me in love with | love |
+ [text1, 44144]        romance, passion, and | love |
+ [text1, 44202]           all the same. They | love |
+ [text1, 45205]           ; she had died for | love |
+ [text1, 45210]             love of him, and | love |
+ [text1, 45284]  show the supreme reality of | love |
+ [text1, 45712]    calling to atom in secret | love |
+ [text1, 47056]     had known the reality of | love |
+ [text1, 47421]          miseries of life. I | love |
+ [text1, 51391]     his own temperament. The | love |
+ [text1, 51401]          - for it was really | love |
+ [text1, 51440]            tire. It was such | love |
+ [text1, 52778]          full of shame. Some | love |
+ [text1, 62637]   painted with the images of | love |
+ [text1, 63873]       anything about them. I | love |
+ [text1, 70156]       there, and a wonderful | love |
+ [text1, 74759]  should have fallen madly in | love |
+ [text1, 75460]           I believe he is in | love |
+ [text1, 75510]           I have not been in | love |
+ [text1, 75536]          you men can fall in | love |
+ [text1, 76198]        the rejoinder." Women | love |
+ [text1, 76262]          If we women did not | love |
+ [text1, 76594]          long as he does not | love |
+ [text1, 80099]         am sick of women who | love |
+ [text1, 83059]                  a malady."" | Love |
+ [text1, 83455]            as some one says, | love |
+ [text1, 83464]            , just as you men | love |
+ [text1, 83472]            eyes, if you ever | love |
+ [text1, 83501]       then, you never really | love |
+ [text1, 86602]            much, but I don't | love |
+ [text1, 86704]             " I wish I could | love |
+ [text1, 87228]         Are you very much in | love |
+ [text1, 92970]         whom he had lured to | love |
+                                
+ secrecy. It seems to           
+ : it is the faithless          
+ with it, Basil.                
+ it is purely a question        
+ and death. Suddenly he         
+ his playing.""                 
+ with somebody, and,            
+ , quite charmed,"              
+ . That is one of               
+ with?" asked Lord              
+ with love. A _grande           
+ . A _grande passion_ is        
+ only once in their lives       
+ her? Harry, I                  
+ her. She is everything         
+ , one always begins by         
+ her, and I must                
+ me. You, who                   
+ me! I want to                  
+ for Sibyl Vane was a           
+ is more than money.            
+ him," she said                 
+ me so much? I                  
+ him. I love him                
+ him because he is like         
+ himself should be. But         
+ my father as I love            
+ Prince Charming?" The          
+ . Besides, what do             
+ was trembling in laughter on   
+ with him, and he               
+ to her could mean her          
+ him."" Why                     
+ him. I wish you                
+ and play Juliet! To            
+ is to surpass one's self       
+ flies in through the window    
+ yourself. Then you will        
+ . Love makes people good       
+ makes people good, and         
+ , would you?"                  
+ him, I suppose,                
+ him for ever!"                 
+ with her, or says              
+ with a beautiful girl who      
+ in a forest that no            
+ out of poetry and to           
+ Sibyl Vane. I want             
+ , your theories about pleasure 
+ in our natures. They           
+ acting. It is so               
+ must be marvellous, and        
+ by summer's ripening breath May
+ , Dorian. Love is              
+ is a more wonderful thing      
+ ! - and you freed              
+ really is. My love             
+ ! My love! Prince              
+ ! Prince Charming! Prince      
+ such as ours? Take             
+ . You have made me             
+ ," he muttered.                
+ . You used to stir             
+ you! What a fool               
+ , if you say it                
+ for you. I think               
+ . Don't go away from           
+ you better than anything in    
+ . Sibyl Vane seemed to         
+ to her because he had          
+ his own beauty. Would          
+ her again. Yes,                
+ came back to him.              
+ would yield to some higher     
+ of you. I wish                 
+ with love for the rest         
+ for the rest of my             
+ ."" I was                      
+ being dominated. I am          
+ of him, and love               
+ would always be a sacrament    
+ . A wonderful tragic figure    
+ or strange affinity? But       
+ . When she knew its            
+ beautiful things that one can  
+ that he bore him -             
+ - had nothing in it            
+ as Michelangelo had known,     
+ might come across his life     
+ and death and madness;         
+ scandals about other people,   
+ that had stirred him to        
+ with you," she                 
+ ," cried Lady Narborough       
+ for a whole week -             
+ with that woman!"              
+ us for our defects.            
+ you for your defects,          
+ her."" Ah                      
+ one. Women who hate            
+ ?"" An illusion                
+ with our ears, just            
+ with your eyes, if             
+ at all.""                      
+ , Mr. Gray,                    
+ her."" And                     
+ ," cried Dorian Gray           
+ with him?" he                  
+ him that he was poor           </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>bing <span class="ot">=</span> <span class="fu">get_sentiments</span>(<span class="st">"bing"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>book_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="fu">c</span>(<span class="st">"gutenberg"</span>,<span class="st">"project"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(bing, <span class="at">by=</span> <span class="st">'word'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>( sentiment, <span class="at">sort =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in word != c("gutenberg", "project"): longer object length is not a
+multiple of shorter object length</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  sentiment     n
+  &lt;chr&gt;     &lt;int&gt;
+1 negative   3161
+2 positive   1986</code></pre>
+</div>
+</div>
 
 
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -196,7 +680,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   for (var i=0; i<noterefs.length; i++) {
     const ref = noterefs[i];
     tippyHover(ref, function() {
-      let href = ref.getAttribute('href');
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
@@ -226,13 +711,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./intro.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      <a href="./TidyText.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">TidyText</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./summary.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

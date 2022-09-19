@@ -9,6 +9,7 @@ book:
     - index.qmd
     - intro.qmd
     - Quanteda-corpus.qmd
+    - TidyText.qmd
     - test.Rmd
     - summary.qmd
     - references.qmd
