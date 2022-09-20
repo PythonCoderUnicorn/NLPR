@@ -1,3 +1,30 @@
 # Summary
 
-In summary, this book has no content whatsoever.
+In the Quanteda chapter section you learned about a corpus, tokens 
+and document-feature-matrix. Looking at the Stat of the Union corpus,
+Britain's manifesto and US Inaugural speeches for document features.
+Quanteda has the keyword in context search, and the ability to make compound tokens.
+
+
+In the TidyText chapter you learned the tokens, cleaning tokens and to make word counts.
+After tokenization and stopwords, sentiment analysis was done. Using tokens for
+document term frequencies, n-grams and word graphs. The section ended with a topic model.
+
+
+Both chapters follow the same steps:
+
+- get text
+- tidy or format text
+- tokenize text
+- join the stopwords 
+- join words with sentiment lexicon "bing" etc
+
+word count on tokenized words, then word count with sentiment word and
+sentiment value counts based on words.
+
+
+
+
+
+
+

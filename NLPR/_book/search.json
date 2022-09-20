@@ -18,14 +18,14 @@
     "href": "summary.html",
     "title": "3  Summary",
     "section": "",
-    "text": "In summary, this book has no content whatsoever."
+    "text": "In the TidyText chapter you learned the tokens, cleaning tokens and to make word counts. After tokenization and stopwords, sentiment analysis was done. Using tokens for document term frequencies, n-grams and word graphs. The section ended with a topic model.\nBoth chapters follow the same steps:\n\nget text\ntidy or format text\ntokenize text\njoin the stopwords\njoin words with sentiment lexicon “bing” etc\n\nword count on tokenized words, then word count with sentiment word and sentiment value counts based on words."
   },
   {
     "objectID": "references.html",
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97."
+    "text": "Text Mining with R: A Tidy Approach. Julia Silge & David Robinson. Online link\nQuanteda. Quantitative Analysis of Textual Data. Tutorials. Online link"
   },
   {
     "objectID": "test.html",

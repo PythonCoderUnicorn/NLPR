@@ -1,4 +1,13 @@
 # References {.unnumbered}
 
 ::: {#refs}
+
+
+
+
 :::
+
+
+Text Mining with R: A Tidy Approach. _Julia Silge & David Robinson_. [Online link](https://www.tidytextmining.com/index.html)
+
+Quanteda. Quantitative Analysis of Textual Data. _Tutorials_. [Online link](https://tutorials.quanteda.io/introduction/)
