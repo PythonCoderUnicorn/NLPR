@@ -4,5 +4,7 @@
 
 # NLPR
 
-a repo for NLPR book
+The repo for the _NLPR_ book. Natural Language Processing in R. This book combines 
+lessons from **Quanteda** and the _Text Mining in R_ with different examples and 
+datasets.
 
