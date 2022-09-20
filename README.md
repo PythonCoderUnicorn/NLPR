@@ -1,6 +1,6 @@
 
 
-<img height='250' align='right' src="./NLPR.png">
+<img height='250' align='right' src="./NLPR/NLPR.png">
 
 # NLPR
 
