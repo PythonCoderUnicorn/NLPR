@@ -6,7 +6,8 @@ delivered in a different way and with different examples. This section is not tr
 do much explaining of concepts as the original material covers that. 
 
 If you read this book without reading the _Text Mining with R_ book first, you will still 
-hopefully be able to follow along and understand the functions.
+hopefully be able to follow along and understand the functions. This section covers most of 
+the book but not everything, the code here is reduced and simplified.
 
 
 ## libraries
@@ -19,7 +20,7 @@ library(tidytext)
 library(readtext)   # read in various text file formats
 library(rvest)      # web scrape 
 library(ralger)     # another web scraping library
-library(wordcloud2) # customizable word cloud
+library(wordcloud2) # flexible word cloud
 ```
 
 
@@ -401,6 +402,7 @@ than Lewis Carroll books. Lewis Carroll uses more common words than H.G. Wells.
 
 
 
+
 ## n-grams
 
 Words in pairs instead of alone, single words without context.
@@ -595,23 +597,209 @@ toronto_words %>%
 
 
 
+```{r}
+
+tweets %>% 
+  unnest_tokens(input = text, output = word) %>% 
+  inner_join(get_sentiments("bing"), by= 'word') %>% 
+  count(sentiment, word, sort = T) %>% 
+  ungroup() %>% 
+  filter( n >= 50) %>% 
+  mutate( n = ifelse(sentiment == "negative", -n, n)) %>% 
+  mutate( word = reorder(word, n)) %>% 
+  ggplot(
+    aes(x= n,
+        y= word,
+        fill= sentiment
+        )
+  )+
+  geom_col()+
+  labs(title ="Twitter text word sentiment" ,
+       x="contribution to sentiment", y="")+
+  ggdark::dark_mode()
+```
+
+
+
 
 
 ## word graph
 
+Visualize the word connections, with nodes and lines, each with weight values.
+
+```{r, message=FALSE, error=FALSE}
+library(igraph)
+library(ggraph)
+
+set.seed(100)
+
+twitter_bigram_counts %>% 
+  filter( n > 50) %>% 
+  igraph::graph_from_data_frame() %>% 
+  ggraph::ggraph(layout = "fr") +
+  geom_edge_link2( aes(edge_alpha= n, 
+                       colour='pink'),
+                 check_overlap = T, 
+                 show.legend = F
+                 ) +
+  geom_node_point(color= "#66ffff") +
+  geom_node_text( aes(label= name), vjust= 1, hjust= 1.2)+
+  ggdark::dark_mode()+
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )
+```
+
+Words centered around "toronto" and "mississauga" whic is part of Toronto and the "gta" also known as the Greater Toronto Area. The graph shows a relationship with the node 'toronto' to  'reggaeallday' to 'reggae' and associated words.
+
+
+
+### pairwise ngrams
+
+Pairwise correlation to look at words frequency and how often the two words are used together.
+The metric used in the phi coefficient, which indicates whether either word appear together than independently.
+
+```{r}
+twitter_cor = twitter_bigram_counts %>% 
+  group_by(word1) %>% 
+  filter( n >= 30) %>% 
+  widyr::pairwise_cor(word1, word2, sort=T)
+```
+
+What words are correlated with the first word 'toronto'.
+
+```{r}
+twitter_cor %>% 
+  filter(item1 =="toronto")
+```
+
+filter on some words of particular interest to see correlation
+
+```{r}
+
+twitter_cor %>% 
+  filter(item1 %in% c("toronto","reggae","tiff","music")) %>% 
+  group_by(item1) %>% 
+  slice_max(correlation, n = 5) %>%
+  ungroup() %>% 
+  mutate(item2 = reorder(item2, correlation)) %>% 
+  ggplot(
+    aes(x= item2,
+        y= correlation, 
+        )
+  )+
+  geom_bar(stat = "identity")+
+  facet_wrap(~item1, scales = "free")+
+  coord_flip()+
+  ggdark::dark_mode()
+```
+
+correlations greater than 0.65
+
+```{r}
+twitter_cor %>% 
+  filter(correlation > .65) %>% 
+  graph_from_data_frame() %>% 
+  ggraph(layout = 'fr') +
+  geom_edge_link2( 
+                 check_overlap = T, 
+                 show.legend = F
+                 ) +
+  geom_node_point(color= "#66ffff", size= 3) +
+  geom_node_text( aes(label= name), 
+                  color='white',  hjust=1, vjust=1,
+                  repel = T)+
+  ggdark::dark_mode()+
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )
+```
 
 
 
 
 
+## Topic Modeling
+
+Topic modeling is classification of documents which aims to find groups within the corpus. 
+
+Using the books from before, tokenization, find the word 'chapter' in the token words, then
+remove the stopwords and count words by book.
+
+```{r}
+book_word_counts = books %>% 
+  group_by(book) %>% 
+  unnest_tokens(input = book_text, output = word ) %>% 
+  mutate(chapter = cumsum(str_detect(word, regex("^chapter", ignore_case = T)))
+         ) %>% 
+  ungroup() %>% 
+  filter( chapter > 0,
+          !word %in% c("project","gutenberg")) %>% 
+  anti_join(stop_words) %>% 
+  count(book, word, sort = T)
+
+head(book_word_counts)
+```
 
 
+for topic models we need a document term matrix in order to use Latent Dirichlet Allocation
+algorithms for out topic modeling.
+
+```{r}
+library(topicmodels)
+
+book_dtm = book_word_counts %>% 
+  cast_dfm(book, word, n)
+
+book_LDA = topicmodels::LDA(book_dtm, k= 4, control= list(seed= 20))
+
+book_LDA_topics = tidy(book_LDA, matrix= 'beta')
+
+head(book_LDA_topics)
+```
+
+Alice is close to 0 for topics 1,2, and 3, but near 1% for topic 4.
 
 
+```{r}
+book_LDA_top5 = book_LDA_topics %>% 
+  group_by(topic) %>% 
+  slice_max(beta, n= 5) %>% 
+  ungroup() %>% 
+  arrange(topic, -beta)
+
+head(book_LDA_top5)
+```
 
 
+```{r}
+book_LDA_top5 %>% 
+  # matches the term to topic with __
+  mutate(term = reorder_within(term, beta, topic)) %>%  
+  ggplot(
+    aes(x= beta,
+        y= term,
+        fill= factor(topic)
+        )
+  )+
+  geom_col(show.legend = F)+
+  facet_wrap(~topic, scales = "free")+
+  scale_y_reordered()+
+  ggdark::dark_mode()+
+  labs(title = "Latent Dirichlet Allocation",
+       subtitle = "words most common within each topic")
+```
 
 
+The words "Alice", "rabbit", "queen" obviously belong to _Alice in Wonderland_ book.
+While the words "denton" and "elizabeth" belong to the _Tales of Space and Time_.
+
+
+---
+
+This concludes the TidyText section of this book.
 
 
 

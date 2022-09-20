@@ -6,11 +6,10 @@ book:
   author: "Zane Dax (She/They)"
   date: "2022-09-12"
   chapters:
-    - index.qmd
-    - intro.qmd
+    - index.qmd # preface
+    - preface.qmd # 1
     - Quanteda-corpus.qmd
     - TidyText.qmd
-    - test.Rmd
     - summary.qmd
     - references.qmd
 
@@ -19,8 +18,11 @@ bibliography: references.bib
 format:
   html:
     theme: slate
+    cover-image: cover.png
   pdf:
     documentclass: scrreprt
+  epub: 
+    cover-image: cover.png
 
 
 

@@ -1,5 +1,6 @@
-# Preface {.unnumbered}
 
-This is a Quarto book.
+# Welcome to NLPR {.unnumbered}
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+This is an online book for _Natural Language Processing in R_. 
+
+This work is by Zane Dax and currently has no license.

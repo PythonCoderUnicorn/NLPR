@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Zane Dax (She/They)">
-<meta name="dcterms.date" content="2022-09-12">
 
-<title>NLPR</title>
+<title>NLPR - Preface</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./preface.html" rel="next">
+<link href="./Quanteda-corpus.html" rel="next">
+<link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,7 +70,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">NLPR</h1>
+      <h1 class="quarto-secondary-nav-title">Preface</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -96,12 +95,12 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">Welcome to NLPR</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Welcome to NLPR</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./preface.html" class="sidebar-item-text sidebar-link">Preface</a>
+  <a href="./preface.html" class="sidebar-item-text sidebar-link active">Preface</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -133,7 +132,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#welcome-to-nlpr" id="toc-welcome-to-nlpr" class="nav-link active" data-scroll-target="#welcome-to-nlpr">Welcome to NLPR</a></li>
+  <li><a href="#outline" id="toc-outline" class="nav-link active" data-scroll-target="#outline">Outline</a></li>
+  <li><a href="#future-plans" id="toc-future-plans" class="nav-link" data-scroll-target="#future-plans">Future plans</a></li>
+  <li><a href="#about-this-book" id="toc-about-this-book" class="nav-link" data-scroll-target="#about-this-book">About this book</a></li>
   </ul>
 </nav>
     </div>
@@ -142,37 +143,40 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">NLPR</h1>
+<h1 class="title d-none d-lg-block">Preface</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Zane Dax (She/They) </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">September 12, 2022</p>
-    </div>
-  </div>
     
   </div>
   
 
 </header>
 
-
-<section id="welcome-to-nlpr" class="level1 unnumbered">
-<p><img src="cover.png" title="NLPR" class="quarto-cover-image img-fluid"></p><h1 class="unnumbered">Welcome to NLPR</h1>
-<p>This is an online book for <em>Natural Language Processing in R</em>.</p>
-<p>This work is by Zane Dax and currently has no license.</p>
+<p>This book was born out of my personal need to have a reference to <strong>text analysis</strong> that was light on the text and more on the code. Having been taught the basics of text analysis from various RLadies meetups who reference <em>Text Mining with R</em> by Julia Silge and David Robinson. This book is to be a reference for those who already read <em>Text Mining with R</em> and to see what the <strong>Quanteda</strong> library offers while keeping the tutorials together.</p>
+<p>There are numerous YouTube videos covering the TidyText library with <code>gutenbergr</code> or <code>janeaustenr</code> libraries to show the functionality of the tidytext library. The Quanteda library has some videos and this book goes through their tutorial. This book aims to be an inclusive reference for text analysis, as to help as many people as possible.</p>
+<p>As I learn more skills and use-cases this book will expand, where I will include tutorials from YouTube or elsewhere as to be a quick guide. In some sense a refresher on what functions to call for a particular task. The goal is to show as many real world examples as I come across and/or have access to.</p>
+<section id="outline" class="level2">
+<h2 class="anchored" data-anchor-id="outline">Outline</h2>
+<ul>
+<li><p>Chapter 1 Quanteda - goes through the official Quanteda tutorial but different examples and concise corpus dataframes in examples. This tutorial of the library is simplified with verbose variable names and code chunk comments.</p></li>
+<li><p>Chapter 2 TidyText - goes through most of the chapters and topics of the book but without much depth or explanation. The data used in this section uses data from Twitter and from some webscraping as to differentiate this book and Julia Silge and David Robinson’s work. Since this section uses different data and far less text for explanations, it should be fair that for those who need further explanation, <em>please read the source material</em>.</p></li>
+</ul>
+</section>
+<section id="future-plans" class="level2">
+<h2 class="anchored" data-anchor-id="future-plans">Future plans</h2>
+<p>This book has plans on expanding libraries and examples from various sources. Part of the plan is to expand part of this book to Python Text Analysis using the SpaCy library.</p>
+</section>
+<section id="about-this-book" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-book">About this book</h2>
+<p>This book has no math formulas, as this book is for those who just want to code and/or refresh their knowledge.</p>
+<p>This book uses the <code>%&gt;%</code> magrittr pipe and uses <code>=</code> instead of the <code>&lt;-</code> assignments. This book tries to use the full library and function syntax such as <code>tidytext::unnest_tokens()</code> when the function being called is not widely known or used.</p>
+<p>Code comments were used in effort to inform the reader of what is happening, what some of the output means and the section queries. This book aims on being clear and to the point, where the reader <em>should</em> be able to go to any section and follow along.</p>
+<p>The data visualizations all use the <code>ggdark::darkmode()</code> function, as to blend with the book dark theme, however this is optional for the reader and can omit this line of code.</p>
 
 
 </section>
@@ -278,10 +282,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Welcome to NLPR</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./preface.html" class="pagination-link">
-        <span class="nav-page-text">Preface</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./Quanteda-corpus.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Quanteda</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

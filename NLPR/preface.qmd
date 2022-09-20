@@ -1,0 +1,79 @@
+
+# Preface {.unnumbered}
+
+
+This book was born out of my personal need to have a reference to **text analysis** that 
+was light on the text and more on the code. Having been taught the basics of 
+text analysis from various RLadies meetups who reference _Text Mining with R_ by Julia Silge and David 
+Robinson. This book is to be a reference for those who already read _Text Mining with R_ and to 
+see what the **Quanteda** library offers while keeping the tutorials together.
+
+
+There are numerous YouTube videos covering the TidyText library with `gutenbergr` 
+or `janeaustenr` libraries to show the functionality of the tidytext library. The Quanteda library
+has some videos and this book goes through their tutorial. This book aims to be an inclusive
+reference for text analysis, as to help as many people as possible.
+
+
+As I learn more skills and use-cases this book will expand, where I will include 
+tutorials from YouTube or elsewhere as to be a quick guide. In some sense a refresher on
+what functions to call for a particular task. The goal is to show as many real world examples
+as I come across and/or have access to. 
+
+
+
+
+## Outline
+
+- Chapter 1 Quanteda - goes through the official Quanteda tutorial but different examples and concise corpus dataframes in examples. This tutorial of the library is simplified with verbose variable names and
+code chunk comments.
+
+- Chapter 2 TidyText - goes through most of the chapters and topics of the book but without much depth or explanation. The data used in this section uses data from Twitter and from some webscraping as to differentiate this book and Julia Silge and David Robinson's work. Since this section uses different data and far less text for explanations, it should be fair that for those who need further explanation, _please read the source material_. 
+
+
+## Future plans
+
+This book has plans on expanding libraries and examples from various sources. Part of the plan is
+to expand part of this book to Python Text Analysis using the SpaCy library.
+
+
+## About this book
+
+This book has no math formulas, as this book is for those who just want to code and/or refresh 
+their knowledge. 
+
+This book uses the `%>%` magrittr pipe and uses `=` 
+instead of the `<-` assignments. This book tries to use the full library and function syntax such as
+`tidytext::unnest_tokens()` when the function being called is not widely known or used. 
+
+
+Code comments were used in effort to inform the reader of what is happening, what some of the
+output means and the section queries. This book aims on being clear and to the point, where
+the reader _should_ be able to go to any section and follow along. 
+
+
+The data visualizations all use the `ggdark::darkmode()` function, as to blend with the book
+dark theme, however this is optional for the reader and can omit this line of code.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
