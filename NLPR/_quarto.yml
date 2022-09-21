@@ -21,8 +21,6 @@ format:
     theme: 
       - darkly
       - custom.scss
-    
- 
     cover-image: bookcover.png
   pdf:
     documentclass: scrreprt
