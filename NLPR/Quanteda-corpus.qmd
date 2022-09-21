@@ -15,3 +15,998 @@ The 3 object types:
 3. `document-feature-matrix` (DFM) = represents frequencies in a document in a matrix, no positions of words, can use bag-of-words analysis
 
 
+## Libraries
+
+Here is the list of Quanteda libraries to install and load in order to follow along with any part of the tutorial.
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages("quanteda")
+# install.packages("quanteda.textmodels") 
+# devtools::install_github("quanteda/quanteda.corpora")
+# devtools::install_github("kbenoit/quanteda.dictionaries")
+# install.packages("readtext")
+
+library(quanteda)
+library(quanteda.textmodels)
+library(quanteda.textstats)
+library(quanteda.textplots)
+library(quanteda.corpora)
+# used for reading in text data
+library(readtext)
+```
+
+The `readtext` package supports: plain text files `(.txt), JSON, csv, .tab, .tsv, .xml, pdf, .doc, .docx, etc` and can be used to read a book for the [Project Gutenberg](https://www.gutenberg.org/) for text analysis.
+
+
+After you have properly installed and loaded the libraries, you can access
+the the data corpus available without the need of reading in a `csv` file.
+Load in a corpus from Quanteda package and save it as a variable.
+
+Corpus available:
+
+- data_corpus_amicus
+- data_corpus_dailnoconf1991
+- data_corpus_EPcoaldebate
+- data_corpus_immigrationnews
+- data_corpus_inaugural  _most common used one in tutorial_
+- data_corpus_irishbudget2010
+- data_corpus_irishbudgets
+- data_corpus_moviereviews
+- data_corpus_sotu  _State of the Union speeches_
+- data_corpus_udhr
+- data_corpus_ukmanifestos
+- data_corpus_ungd2017
+
+
+```{r}
+# to load a corpus and save it as variable name
+corpus = corpus(data_char_ukimmig2010)
+```
+
+
+
+## Corpus
+
+Load the corpus `data_corpus_ukmanifestos`, which is about British election manifestos on immigration and asylum.
+
+```{r}
+brit_manifesto = corpus(data_corpus_ukmanifestos,
+                        docvars = data.frame(party = names(data_corpus_ukmanifestos)))
+
+
+brit_manifesto
+```
+
+```{r}
+head( summary(brit_manifesto) )
+```
+
+
+
+
+### docvars
+
+Quanteda objects keep information associated with documents, these are 'document level variables'
+and are accessed using `docvars()` function.
+
+```{r}
+inaug_corpus = corpus(data_corpus_inaugural)
+
+head( docvars(inaug_corpus))
+```
+
+
+
+To extract `docvars` variables use the `field` argument or use the `$` like you normally use on a dataframe.
+
+
+```{r}
+docvars( inaug_corpus, field = 'Year')
+```
+
+
+Create or update `docvars`, in this example of creating a column for Century.
+
+```{r}
+floor_ = floor(docvars(inaug_corpus, field = 'Year') / 100)+1
+
+docvars(inaug_corpus, field = 'Century') = floor_
+
+head(docvars(inaug_corpus))
+```
+
+
+
+### subset
+
+This section is about using the `corpus_subset()` function on all `docvars`.
+
+
+```{r}
+#--- get the Inaugural Speeches
+# inaug_corpus
+
+#--- look at the docvars
+# head( docvars(inaug_corpus))
+
+# now we subset the corpus for speeches after 1990
+inaug_corpus_subset1990s = corpus_subset(inaug_corpus, Year >= 1990)
+
+# check the number of documents 
+head(inaug_corpus_subset1990s, 3)
+```
+
+
+If you want only specific US Presidents. _Note that there are 2 data objects that appear when you type 'President', `presidents` from the {datasets} package and `presidential` from {ggplot2} package_.
+
+
+```{r}
+# select specific US Presidents
+selected_presidents = c('Obama','Clinton','Carter')
+
+democrat_corpus_subset =  corpus_subset(inaug_corpus,
+                                        President %in% selected_presidents
+                                        )
+
+
+democrat_corpus_subset
+```
+
+
+
+
+
+### reshape
+
+You can reshape the document paragraphs to sentences, which can be restored even after being
+modified by functions.
+
+
+```{r}
+UN_corpus = corpus(data_corpus_ungd2017)
+
+# 196 documents, 7 docvars
+head(UN_corpus)
+```
+
+
+Now change the document into sentences
+
+```{r}
+UN_corpus_sentences = corpus_reshape(UN_corpus, to= 'sentences')
+
+head(UN_corpus_sentences)
+
+# there is now 16806 number of documents
+```
+
+To change back 
+
+```{r}
+UN_corpus_doc = corpus_reshape(UN_corpus_sentences, to= 'documents')
+```
+
+
+
+
+
+
+
+### segment
+
+You can extract segments of text and tags from documents, the use-case for this is
+analyzing documents or transcripts separately.
+
+
+Document sections
+
+
+The created mini text document that has 6 lines, which has section that 
+uses "##" as a pattern to organize the text into new lines. Here is what the
+text file contains.
+
+```{r}
+##INTRO This is the introduction.
+##DOC1 This is the first document.  Second sentence in Doc 1.
+##DOC3    Third document starts here.  End of third document.
+##INTRO                                               Document
+##NUMBER                                      Two starts before
+##NUMBER                                                 Three.
+```
+
+
+
+```{r}
+library(readr)
+
+# read in a simple text file as shown above
+txt_file = readr::read_file('./doctext.txt')
+
+# need to convert it to a corpus object
+txt_file_corpus = corpus(txt_file)
+
+# provide the pattern of ## in order for it to be separated into new lines
+txt_seg = corpus_segment(txt_file_corpus, pattern = "##*")
+txt_seg
+```
+
+
+By providing a pattern value for the `corpus_segment()` you can do regular expressions for
+removing words and symbols.
+
+
+```{r}
+# transform text into corpus
+corp_speeches = corpus("Mr. Samwell Tarly: Text Analysis.
+                        Mx. Jones: More text analysis?
+                        Mr. Samwell Tarly: we will do it again, and again.")
+
+# use corpus segment with regular expression pattern matching
+corp_speakers = corpus_segment(corp_speeches, 
+                                pattern = "\\b[A-Z].+\\s[A-Z][a-z]+:", 
+                                valuetype = "regex")
+
+# bind the rows together
+cbind(docvars(corp_speakers), text = as.character(corp_speakers))
+```
+
+
+
+
+## Tokens
+
+Tokens segments texts in a corpus (words or sentences) by word boundaries.
+
+
+```{r}
+# step 1 - load in corpus
+sotu_corpus = corpus(data_corpus_sotu)
+
+# step 2 - pass in the corpus into tokens function
+# using the tokens() you can remove punctuation and numbers
+
+sotu_corpus_tokens = tokens(sotu_corpus, 
+                            remove_punct = TRUE,
+                            remove_symbols = TRUE,
+                            remove_numbers = TRUE,
+                            remove_url = TRUE
+                            )
+
+head(sotu_corpus_tokens, 3)
+```
+
+
+
+
+
+### kwic
+
+Keyword-in-contexts (kwic) is the method used to search for keywords in corpus documents.
+
+```{r}
+#-- continue using the tokenized corpus of State of the Union
+# sotu_corpus_tokens
+
+# keyword to search the corpus follows the pattern argument
+# our keyword here will be 'love'
+# save kwic in a variable
+
+keyword_search =  kwic(sotu_corpus_tokens, pattern = 'love')
+
+head(keyword_search)
+```
+
+
+
+You can search for multiple words by using a vector.
+
+
+```{r}
+search_words = c('love','science')
+
+searched_words = kwic(sotu_corpus_tokens, pattern = search_words)
+
+head(searched_words)
+```
+
+
+
+
+For multi-word expressions, use the `phrase()` function after the pattern argument.
+
+```{r}
+us_searchword = kwic(sotu_corpus_tokens, pattern =  phrase("United States"))
+
+head(us_searchword)
+```
+
+
+To view all of the keyword search results in a RStudio window.
+
+```{r}
+# view(us_searchword)
+```
+
+
+
+
+### select tokens
+
+
+You can remove tokens that you do not want or interest in, this can be either on its own
+or in combination with `stopwords()` function.
+
+So far we have tokenized the State of the Union corpus and did some keyword searched, but the
+corpus still has `stopwords` inside the text, to remove them we use the 
+function `tokens_select()` and pass in the stopwords along with the language parameter.
+
+
+```{r}
+#-- continue using sotu corpus
+
+sotu_corpus_tokens_clean = tokens_select(sotu_corpus_tokens,
+              pattern =  stopwords('en'), # 'en' for English
+              selection = 'remove'
+              )
+
+head(sotu_corpus_tokens_clean, 3)
+
+#---- equivalent function call
+#  tokens_remove( sotu_corpus_tokens, pattern= stopwords('en'), padding= FALSE )
+```
+
+
+For very specific words that interest you in token selection, you can pass in a 
+vector of those words.
+
+```{r}
+specific_words = c('love','scien*','reason')
+
+specific_tokens_select = tokens_select(sotu_corpus_tokens,
+                                       pattern = specific_words,
+                                       padding = FALSE
+                                       )
+
+# Tokens consisting of 241 documents and 6 docvars.
+head(specific_tokens_select)
+```
+
+
+To see the words that surround the selected token, use the window argument, here the window 
+is 5 words.
+
+```{r}
+window_token_select = tokens_select(sotu_corpus_tokens, 
+              pattern = specific_words, 
+              padding = F, 
+              window = 5
+              )
+
+head(window_token_select, 3)
+```
+
+
+
+
+### compund tokens
+
+Similar to what we already did, there is a `tokens_compound()` function
+that uses a vector for tokens to search. This will look just like the `kwic()` function.
+
+
+```{r}
+#---- kwic() 
+searched_words2 = c("americ*", "american people")
+
+america_kwic = kwic(sotu_corpus_tokens, pattern = searched_words2)
+
+head(america_kwic)
+
+```
+
+
+
+```{r}
+#---- tokens_compound
+
+america_token_compound = tokens_compound(sotu_corpus_tokens,
+                pattern = phrase(searched_words2) 
+                )
+
+# head(america_token_compound)
+head( kwic(america_token_compound, pattern = searched_words2) )
+```
+
+
+
+
+
+### n-grams
+
+You can make n-grams in any length from tokens using the `tokens_ngrams()` which
+makes a sequence of tokens.
+
+```{r}
+# -- pass in the sotu corpus tokens object
+#    n-gram will be from 2 to 4
+
+sotu_corpus_ngrams = tokens_ngrams(sotu_corpus_tokens, n= 2:4)
+
+# for simplicity, the 1st document is shown
+# 1st document, 20 of the docvars n-grams
+
+head(sotu_corpus_ngrams[[1]], 20)
+
+# head(sotu_corpus_ngrams, 3)
+```
+
+
+You can skip n-grams
+
+
+```{r}
+sotu_corpus_ngrams_skip = tokens_ngrams(sotu_corpus_tokens,
+                                        n= 2,
+                                        skip = 1:2
+                                        )
+
+# notice the document returns [1][4] ...
+
+head(sotu_corpus_ngrams_skip, 2)
+```
+
+
+
+Selective ngrams
+
+
+Selecting ngrams based on a keyword, phrase or a vector of words is done by
+using the `tokens_compound()` and `tokens_select()`.
+
+
+```{r}
+#-- select phrases that have 'not'
+
+phrase_not = c("not *","not_*")
+
+sotu_not_ngrams = tokens_compound(sotu_corpus_tokens,
+                pattern = phrase(phrase_not)
+                )
+
+sotu_not_ngrams_select = tokens_select(sotu_not_ngrams, 
+                                       # need to include again
+                                       pattern = phrase(phrase_not)
+                                       )
+
+head(sotu_not_ngrams_select, 3)
+
+```
+
+
+
+
+
+## document-feature-matrix
+
+
+A document-feature-matrix (dfm) is made from tokens objects. Unlike all the work
+previously the objects returned were documents in a row with `docvars` for each tokens
+operation performed. A `dfm` returns a dataframe like object with features and docvars.
+
+
+```{r}
+# -- continue to use the sotu tokens object where punctuation etc. was removed
+# sotu_corpus_tokens
+
+sotu_corpus_dfm = dfm(sotu_corpus_tokens)
+
+head(sotu_corpus_dfm)
+
+```
+
+
+
+Common functions to use with a document-feature-matrix:
+
+- `docnames( )`
+- `featnames( )`
+- `rowSums( )`
+- `colSums( )`
+
+
+To get the most frequent features can be retrieved by using `topfeatures()`
+
+
+```{r}
+#-- this corpus dfm has stopwords included
+# topfeatures(sotu_corpus_dfm)
+
+#-- to use the cleaned corpus need to make it a dfm
+
+sotu_corpus_tokens_clean_dfm = dfm(sotu_corpus_tokens_clean)
+
+topfeatures(sotu_corpus_tokens_clean_dfm)
+```
+
+
+To get a proportion of a feature within documents total count, use 
+the `dfm_weight(scheme='prop')`, which is a relative frequency.
+The scheme by default is 'count'.
+
+
+```{r}
+# dfm_weight(sotu_corpus_dfm, scheme = 'prop')
+
+dfm_weight(sotu_corpus_tokens_clean_dfm, scheme = 'prop')
+```
+
+
+
+Get the weight of dfm by `tf-idf` frequency inverse document frequency
+
+```{r}
+dfm_tfidf(sotu_corpus_tokens_clean_dfm, 
+          scheme_df = 'inverse', 
+          scheme_tf = 'count'
+          )
+```
+
+
+### dfm_keep
+
+You can select features from a dfm using `dfm_select()` and `dfm_keep()`, keep the number 
+of features at least the number of times.
+
+```{r}
+# -- continue with sotu tokens dfm
+# sotu_corpus_tokens_clean_dfm
+
+sotu_clean_dfm_keep = dfm_keep(sotu_corpus_tokens_clean_dfm,
+                               min_nchar= 5)
+
+head(sotu_clean_dfm_keep)
+
+```
+
+
+See the topfeatures for the min characters 
+
+```{r}
+topfeatures( sotu_clean_dfm_keep)
+```
+
+If the number of features is below a number threshold that you want, you can 
+use the `min_termfreq = n` to drop the features below `n`. In this example we use
+10, so any feature that appears less than 10 times in all of the document will be 
+removed. If `max_docfreq = 0.1`, then features more than 10% of the documents will be
+removed.
+
+```{r}
+#  an option is to include docfreq_type= 'prop'
+#  for relative proportion
+
+sotu_clean_minfreq = dfm_trim(sotu_corpus_tokens_clean_dfm,
+                              min_termfreq = 10)
+
+head(sotu_clean_minfreq)
+```
+
+
+
+
+### dfm group
+
+You can merge documents based on a vector and then takes the sum of feature frequencies.
+
+```{r}
+#-- Inaugural Speech corpus
+# we skipped the corpus() then tokens() step here
+# as you can find the corpus by typing data_<tab>
+
+inaug_tokens = tokens(data_corpus_inaugural)
+
+inaug_dfm = dfm(inaug_tokens)
+# head(inaug_dfm)
+
+# group by Party
+dfm_group_party = dfm_group(inaug_dfm, groups = Party)
+
+head(dfm_group_party)
+
+docvars(dfm_group_party)
+```
+
+
+
+
+
+### FCM
+
+Feature co-occurrence matrix acts similar to dfm.
+You can construct a FCM from a DFM or a tokens object using `fcm()`. topfeatures() 
+returns the most frequently co-occuring words.
+
+
+```{r}
+# download news corpus
+corp_news = download("data_corpus_guardian")
+
+head(corp_news)
+```
+
+
+```{r}
+news_tokens = tokens(corp_news,
+                    remove_punct = T,
+                    remove_separators = T,
+                    remove_url = T)
+
+news_dfm = dfm(news_tokens) 
+
+news_dfm = dfm_remove(news_dfm , 
+                      pattern= c(stopwords("en"), "*-time", "updated-*", "gmt", "bst","|"))
+
+news_dfm_trim = dfm_trim(news_dfm, min_termfreq = 100)
+
+topfeatures(news_dfm_trim)
+```
+
+
+
+
+## Stat Analysis
+
+
+```{r}
+sotu_statfreq = textstat_frequency(sotu_corpus_tokens_clean_dfm,
+                   n= 5,
+                   groups = President)
+
+head( sotu_statfreq )
+```
+
+
+
+### lexical diversity
+
+`textstat_lexdiv()` calculates various lexical diversity measures based on the number of unique types of tokens and the length of a document. It is useful, for instance, for analyzing speakers’ or writers’ linguistic skills, or the complexity of ideas expressed in documents.
+
+
+```{r}
+inaug_tokens_dfm = dfm(inaug_tokens) %>% 
+  dfm_remove(stopwords('en'))
+
+# inaug_tokens_dfm
+```
+
+```{r}
+inaug_lexdiv = textstat_lexdiv( inaug_tokens_dfm ) 
+
+head( inaug_lexdiv )
+```
+
+
+```{r}
+plot(inaug_lexdiv$TTR, type = "l", xaxt = "n", xlab = NULL, ylab = "TTR")
+grid()
+axis(1, at = seq_len(nrow(inaug_lexdiv)), labels = inaug_dfm$President )
+
+
+```
+
+
+
+
+### document feature similarity
+
+`textstat_dist()` calculates similarities of documents or features for various measures. Its output is compatible with R’s `dist()`, so hierarchical clustering can be performed without any transformation.
+
+```{r}
+inaug_dfm_dist = as.dist( inaug_tokens_dfm )  
+
+inaug_clustering = hclust( inaug_dfm_dist )
+
+plot( inaug_clustering, xlab= "Distance", ylab="")
+```
+
+
+
+### relative frequency analysis
+
+Also known as keyness, Keyness is a signed two-by-two association scores originally implemented in WordSmith to identify frequent words in documents in a target and reference group.
+
+```{r}
+sotu_keyness = textstat_keyness( sotu_corpus_dfm ) 
+
+textplot_keyness( sotu_keyness)
+
+```
+
+
+### collocation analysis
+
+A collocation analysis allows us to identify contiguous collocations of words. One of the most common types of multi-word expressions are proper names, which can be identified simply based on capitalization in English texts.
+
+Example from Quanteda, not run here.
+
+```{}
+
+corp_news <- download("data_corpus_guardian")
+
+
+toks_news <- tokens(corp_news, remove_punct = TRUE)
+
+tstat_col_caps <- tokens_select(toks_news, pattern = "^[A-Z]", 
+                                valuetype = "regex", 
+                                case_insensitive = FALSE, 
+                                padding = TRUE) %>% 
+                  textstat_collocations(min_count = 100)
+                  
+head(tstat_col_caps, 20)
+```
+
+
+
+
+
+
+
+## Advanced Operations
+
+We can compute the similarities between authors by grouping their documents and comparing them with all other authors.
+
+```{r}
+twitter_df = read_csv2("./TorontoTweetsText.csv")
+
+head(twitter_df)
+```
+
+
+construct a corpus 
+
+```{r}
+twitter_corpus = corpus(twitter_df)
+
+head(twitter_corpus)
+```
+
+
+Construct a document-feature matrix, and remove tags, links, and English stopwords.
+
+```{r}
+twitter_dfm = twitter_corpus %>% 
+  # tokenize and clean text
+  tokens(remove_punct = TRUE,
+         remove_symbols = TRUE,
+         remove_url = TRUE,
+         remove_separators = TRUE) %>% 
+  # make it into a dfm
+  dfm() %>% 
+  # remove stopwords
+  dfm_remove(stopwords("en")) %>% 
+  # extra string cleaning
+  dfm_remove(pattern= c("#*","@*", "rt","RT","H/T","h/t",".com",".ca","amp"))
+
+
+head(twitter_dfm)
+  
+```
+
+
+see top features
+
+```{r}
+topfeatures( twitter_dfm )
+```
+
+
+The Twitter data used in this section has only the text of the tweets. If the full data file
+containing screen names, then the following would work, which allows for clustering users in a dendrogram.
+
+```{}
+# --- group twitter users by screen name
+twitter_dfm_groups = dfm_group(twitter_dfm, groups = screen_name)
+
+#--- select tweets that meet a criteria
+#     remove tweets with a frequency < 10 and tweets with >50 tokens in total
+
+twitter_select = twitter_dfm_groups %>% 
+    dfm_select( min_nchar = 2) %>% 
+    dfm_trim( min_termfreq = 10)
+    
+twitter_select = twitter_select[ ntoken( twitter_select ) > 50 , ]
+
+#-- clustering
+
+twitter_dist = as.dist(  textstat_dist( twitter_select ))
+twitter_clust = hclust( twitter_dist )
+
+plot( twitter_clust )
+```
+
+
+
+
+
+### multi-word expressions
+
+We can compound multi-word expressions through collocation analysis. 
+
+```{r}
+text = c("Everyone loves New York!", "The home office of Barak Obama was in the White House.", "European Union is also known as the EU.","Soon it will be Black Friday, crazy time.")
+
+text
+```
+
+now tokenize the text and clean the text
+
+```{r}
+text_corpus = corpus(text)
+
+text_tokens = tokens(text_corpus, 
+                     remove_punct = T, 
+                     remove_separators = T) %>% 
+  tokens_remove(stopwords("en"))
+
+text_tokens
+```
+
+
+One of the most common type of multi-word expressions is proper names, which we can select simply based on capitalization in English texts.
+
+```{}
+# this text example is too small to run but the code is valid
+
+text_tokens2 = tokens_select(text_tokens,
+              pattern = "^[A-Z]",
+              valuetype = "regex",
+              case_insensitive = FALSE
+              )
+
+text_collocat = textstat_collocations( text_tokens2, tolower = FALSE)
+
+tokens_compound(text_tokens, pattern = text_collocat[ text_collocat$z > 3])
+```
+
+once you have all your tokens compounded, you can search where they are in the corpus.
+
+```{r}
+# this is an imperfect example but shows the steps to use in large corpus
+
+kwic(text_tokens, pattern = "Barak")
+```
+
+
+
+
+### related keywords
+
+We can identify related words of keywords based on their distance in the documents. 
+
+Just a reminder of steps for a corpus to be ready for the `textstat_keyness()`
+
+- tokenize a corpus with `tokens()`
+- clean tokens `tokens_remove()`
+- transform tokens into a `dfm()`
+
+```{r}
+inaug_keyness = textstat_keyness( inaug_tokens_dfm )
+
+head(inaug_keyness)
+```
+
+
+
+
+### Naive Bayes classifier
+
+Naive Bayes is a supervised model usually used to classify documents into two or more categories. We train the classifier using class labels attached to documents, and predict the most likely class(es) of new unlabeled documents.
+
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages('caret')
+library(caret)
+
+movie_review = corpus(data_corpus_moviereviews)
+
+# head(movie_review)
+
+summary(movie_review, 5)
+
+```
+
+
+The variable “Sentiment” indicates whether a movie review was classified as positive or negative. In this example we use 1500 reviews as the training set and build a Naive Bayes classifier based on this subset. In a second step, we predict the sentiment for the remaining reviews (our test set).
+
+```{r}
+set.seed(300)
+
+id_train = sample(1:2000, 1500, replace = FALSE)
+
+head(id_train)
+```
+
+```{r}
+# create docvar with id
+movie_review$id_num = 1:ndoc(movie_review)
+
+# tokenize texts
+movie_review_tokens = tokens(movie_review,
+                             remove_punct = T,
+                             remove_numbers = T) %>% 
+  tokens_remove(stopwords("en")) %>% 
+  tokens_wordstem()
+
+# movie review dfm
+movie_review_dfm = dfm(movie_review_tokens)
+
+# TRAINING SET
+movie_training = dfm_subset(movie_review_dfm, id_num %in% id_train)
+
+# TEST SET 
+movie_test = dfm_subset(movie_review_dfm, !id_num %in% id_train)
+```
+
+
+
+Naive Bayes 
+
+```{r}
+movie_naiveBayes = textmodel_nb(movie_training, movie_training$sentiment)
+
+summary(movie_naiveBayes)
+```
+
+
+Naive Bayes can only take features into consideration that occur both in the training set and the test set, but we can make the features identical using dfm_match()
+
+```{r}
+movie_dfm_match = dfm_match(movie_test, features = featnames(movie_training))
+```
+
+inspect the classification model
+
+```{r}
+movie_actual_class = movie_dfm_match$sentiment
+
+movie_predicted_class = predict( movie_naiveBayes, newdata = movie_dfm_match )
+
+movie_class_matrix = table( movie_actual_class, movie_predicted_class)
+
+movie_class_matrix
+```
+
+From the cross-table we see that the number of false positives and false negatives is similar. The classifier made mistakes in both directions, but does not seem to over- or underestimate one class.
+
+
+```{r}
+caret::confusionMatrix(
+  movie_class_matrix,
+  mode= "everything",
+  positive= "pos"
+)
+```
+
+
+
+---
+ End of Quanteda section
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
