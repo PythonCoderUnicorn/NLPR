@@ -13,9 +13,6 @@ book:
     - TidyText.qmd
     - summary.qmd
     - references.qmd
-
-# bibliography: references.bib
-
 format:
   html:
     theme: [darkly, custom.scss]
