@@ -15,7 +15,9 @@ book:
     - references.qmd
 format:
   html:
-    theme: [darkly, custom.scss]
+    theme: 
+      - darkly
+      - custom.scss
   pdf:
     documentclass: scrreprt
   epub: 
