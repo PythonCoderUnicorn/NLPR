@@ -18,9 +18,7 @@ book:
 
 format:
   html:
-    theme: 
-      - darkly
-      - custom.scss
+    theme: [darkly, custom.scss]
     cover-image: bookcover.png
   pdf:
     documentclass: scrreprt
