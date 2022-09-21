@@ -18,8 +18,8 @@ format:
     theme: 
       - darkly
       - custom.scss
-  pdf:
-    documentclass: scrreprt
+  # pdf:
+  #   documentclass: scrreprt
   epub: 
     cover-image: bookcover.png
 
