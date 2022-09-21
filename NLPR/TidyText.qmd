@@ -10,3 +10,811 @@ hopefully be able to follow along and understand the functions. This section cov
 the book but not everything, the code here is reduced and simplified.
 
 
+## libraries
+
+The necessary libraries to follow along with this section.
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidytext)
+library(readtext)   # read in various text file formats
+library(rvest)      # web scrape 
+library(ralger)     # another web scraping library
+library(wordcloud2) # flexible word cloud
+```
+
+
+
+## Text
+
+You need or want text to analyze, so let us scrape the web to get some! This is 2 skills in one, web scrape and tokenization of text. In this example we will web scrape the movie transcript of _Star Trek II : The Wrath of Khan_, as it is a beginner friendly example. 
+
+
+If you use Chrome browser and have **SelectorGadget** browser extension, this is very helpful in 
+finding the HTML `<tags>` when scraping the web. 
+
+```{r}
+# Star Trek transcripts url
+
+trek_url = "http://www.chakoteya.net/movies/movie2.html"
+
+# use rvest to read the html
+# use SelectorGadget to find tag for all the text on page
+# retrieve only the text on page
+
+trek_dialogue = rvest::read_html(trek_url) %>% 
+  # this website has all text in the "td" tag
+  rvest::html_elements("td") %>% 
+  rvest::html_text2()
+
+```
+
+
+### Tokens
+
+The `trek_dialogue` returns 1 very long string, this text needs to be tokenized in order 
+for it to be used for analysis.
+
+Step one is to convert our long string into a data frame then tokenize it by using tidytext `unnest_tokens()` function. 
+
+```{r}
+trek_df = tibble( trek_dialogue) %>% 
+  unnest_tokens(input = trek_dialogue, output = word)
+
+head(trek_df)
+```
+
+
+
+### Clean tokens
+
+We have a dataframe with tokenized words, but the words include **stopwords** which include words like: "a", "but", "such", "sometimes", etc. and have no value in text analysis. To remove all of these
+stopwords is by using tidytext `stop_words`. 
+
+```{r}
+trek_df_clean = trek_df %>% 
+  anti_join(stop_words)
+
+head(trek_df_clean)
+```
+
+
+We went from 8,852 tokens to 4,070 tokens.
+
+
+### Word count
+
+Now we have a cleaned tokenized data frame, we can find out what are the most common words in this movie _Wrath of Khan_.
+
+```{r}
+trek_wordcount = trek_df_clean %>% 
+  dplyr::count(word, sort = TRUE)
+
+# we can use ggplot to visualize
+library(ggplot2) # just in case tidyverse did not include this
+
+trek_wordcount %>% 
+  # word counts greater than 50 
+  dplyr::filter(n > 50) %>% 
+  ggplot(
+    aes( x= n, 
+         y= reorder(word, n),
+         fill= n
+         )
+  ) +
+  geom_col() +
+  ggdark::dark_mode() +
+  labs(title = "Word Count for Star Trek II: Wrath of Khan",
+       y="", 
+       x="word count", 
+       fill="count"
+       )
+
+```
+
+
+
+
+## Sentiment 
+
+For Sentiment Analysis you need to load in the sentiment lexicon libraries.
+The three main ones used are:
+
+- AFINN
+- bing
+- nrc
+
+Each have their use-cases and licenses, but we will use `bing` here as it bins sentiments into
+'positive' / 'negative'.
+
+
+The goal is to bind the words in our Star Trek data frame and the sentiment.
+
+```{r}
+# get the bing sentiment
+bing = get_sentiments("bing")
+
+
+trek_df_clean_sentiment = trek_df_clean %>% 
+  count(word, sort = T) %>% 
+  inner_join(bing) %>% 
+  ungroup()
+
+```
+
+
+```{r}
+head( trek_df_clean_sentiment)
+```
+
+
+
+```{r}
+trek_df_clean_sentiment %>% 
+  filter(n > 3) %>% 
+  ggplot(
+    aes(x= n, 
+        y= sentiment,
+        fill= sentiment)
+  )+
+  geom_col()+
+  facet_wrap( ~ word, ncol = 2, scales = "free_y") +
+  ggdark::dark_mode()
+```
+
+The word warp is more of a neutral word but this Star Trek text is not common for everyday text analysis, so uncommon output is to be expected.
+
+
+```{r}
+trek_df_clean_sentiment %>% 
+  group_by(sentiment) %>% 
+  slice_max(n, n= 5) %>% 
+  ungroup() %>% 
+  mutate(word = reorder(word, n)) %>% 
+  ggplot(
+    aes(x= n,
+        y= word,
+        fill= sentiment
+        )
+  )+
+  geom_col(show.legend = F) +
+  facet_wrap( ~sentiment, scales = "free_y")+
+  ggdark::dark_mode() +
+  labs(x= "Contribution to sentiment", y="", title = "Words that contribute to positive and negative sentiment: ST: Wrath of Khan")
+```
+
+
+
+
+## Wordclouds
+
+As a person who tries to avoid white backgrounds of websites, plots, and documents I like using 
+the library `wordcloud2` as you can change the background color of the word cloud. 
+With wordcloud2 is that you have interactive word clouds, when your mouse hovers over a word it tells you the number of times that word is counted (obviously when a word count is conducted).
+
+
+```{r}
+library(wordcloud2)
+
+
+trek_df_clean %>% 
+  count(word, sort = T) %>% 
+  filter(n > 10) %>% 
+  wordcloud2(size = 1,
+             minSize = 0.8, 
+             backgroundColor = "black", 
+             color = "random-light",
+             shape = "pentagon"  #"circle"
+             )
+```
+
+
+
+
+### Sentiment wordcloud
+
+If interested in specific sentiment words to make a word cloud based on word counts.
+Here is a positive word cloud based on Star Trek II: Wrath of Khan.
+
+```{r}
+trek_df_clean_sentiment %>%
+  filter(sentiment == "positive") %>% 
+  wordcloud2(
+    size = 0.8,
+    minSize = 0.6,
+    backgroundColor = "black",
+    color = "random-light"
+  )
+  
+```
+
+
+Here is the negative sentiment for our Star Trek text data frame.
+
+```{r}
+trek_df_clean_sentiment %>%
+  filter(sentiment == "negative") %>% 
+  wordcloud2(
+    size = 0.8,
+    minSize = 0.6,
+    backgroundColor = "black",
+    color = "random-light"
+  )
+```
+
+
+
+
+
+
+
+
+
+## document-term-frequency
+
+In the Quanteda section this was called `document-feature-matrix`. The main query is how often in frequency does a word appear in a text, a chapter or book? To help answer that is to use the
+_inverse term frequency_ and _inverse document frequency_ (tdf). This `tdf`places less importance on words that are common and more importance on less common words. Together the
+_inverse term frequency_ + _inverse document frequency_ = _tf_idf_. 
+
+Note that this section we do not remove stopwords as they will get a higher weight scale, where we care more about the high weight scale score for less common words.
+
+
+This section will follow a similar example however we have different books and at this time the Gutenbergr package was giving errors on downloading more than one book. The goal is to look at word frequencies that differ chapters of an author's book and between authors. The books selected 
+here are:
+
+- Alice’s Adventures in Wonderland, by Lewis Carroll
+- The Hunting of the Snark, by Lewis Carroll
+- The Time Machine, by H. G. Wells
+- Tales of Space and Time, by Herbert George Wells
+
+The code below uses the url and downloads the text into an individual book, then each book
+is made into a dataframe with each book being labelled.
+
+```{r}
+books = tibble(
+  book = c("Alice's Adventures in Wonderland", 
+           "The Hunting of the Snark",
+           "The Time Machine",
+           "Tales of Space and Time"),
+  book_urls = c("https://www.gutenberg.org/files/11/11-0.txt",
+                "https://www.gutenberg.org/cache/epub/13/pg13.txt",
+                "https://www.gutenberg.org/files/35/35-0.txt",
+                "https://www.gutenberg.org/files/27365/27365-0.txt")
+  ) %>% 
+  dplyr::mutate(
+    book_text = purrr::map_chr(book_urls, 
+                               ~.x %>% 
+                                 rvest::read_html() %>% 
+                                 rvest::html_text2()
+    ))
+
+```
+
+```{r}
+head(books)
+```
+
+
+Now that we have our text dataframe, we can tokenize the text.
+
+```{r}
+book_tokens = books %>% 
+  unnest_tokens(input = book_text, output = word)
+```
+
+
+```{r}
+book_words = book_tokens %>% 
+  count(book, word, sort = T)
+```
+
+
+```{r}
+total_book_words = book_words %>% 
+  group_by(book) %>% 
+  summarise( total = sum((n)))
+
+total_book_words
+```
+
+
+```{r}
+full_book_words = left_join(book_words, total_book_words) %>% 
+  mutate(percentage = n /total )
+
+head(full_book_words)
+```
+
+
+
+```{r}
+ggplot(
+  data = full_book_words,
+  aes(x = percentage , fill= book)
+)+
+  geom_histogram( show.legend = F, bins = 20)+
+  facet_wrap( ~book, ncol = 2, scales = "free_y")+
+  ggdark::dark_mode()+
+  labs(title = "Term Frequency Distributions for 4 selected books",
+       subtitle = "stopwords are counted here")
+```
+
+The plot shows that there are many non-stopwords used in these books.
+
+
+
+
+### tf_idf function
+
+Find the words most important to a document or corpus and the weighted score value depends
+on how frequent that word is within the corpus. The tidytext has a function `bind_tf_idf()` 
+to help find important words.
+
+- `0` = very common words
+- non-0 are words less common
+
+
+```{r}
+books_tf_idf = full_book_words %>% 
+  bind_tf_idf(word, book, n)
+
+head(books_tf_idf)
+```
+
+
+
+```{r}
+books_tf_idf %>% 
+  select( -total, -percentage ) %>% 
+  arrange( desc(tf_idf))
+```
+
+
+
+
+```{r}
+books_tf_idf %>% 
+  select( -total, -percentage ) %>% 
+  group_by( book ) %>% 
+  slice_max(tf_idf, n= 15) %>% 
+  ungroup() %>% 
+  ggplot(
+    aes(x= tf_idf,
+        y= reorder(word, tf_idf),
+        fill= book
+        )
+  )+
+  geom_col(show.legend = F)+
+  facet_wrap(~book, ncol = 2, scales = "free")+
+  labs(x= "tf_idf", y="", 
+       title = "Lewis Carroll vs H.G. Wells books",
+       subtitle = "term frequency-inverse document frequency"
+       )+
+  ggdark::dark_mode()
+```
+
+
+The tf_idf plot show that H.G. Wells books on the right differ in words 
+than Lewis Carroll books. Lewis Carroll uses more common words than H.G. Wells.
+
+
+
+
+
+
+
+## n-grams
+
+Words in pairs instead of alone, single words without context.
+Use the `unnest_tokens()` function but pass in "ngram" the argument along with the 
+number of words to include.
+
+
+This example will use Twitter data, specifically tweets that had the hashtag "#Toronto"
+in the tweet, no other Twitter data is included here. The data was collected using the 
+`rtweet` package. For this n-grams section it is important to use the rtweet library to
+read in the data as you will get errors when trying to make bigrams.
+
+```{r}
+tweets = rtweet::read_twitter_csv("./TorontoTweetsText.csv")
+
+head(tweets)
+```
+
+
+### bigrams
+
+Since we used the rweet library to read in the data, we are able to make bigrams. You will get 
+an error if you use the `read_csv()` to load in the file.
+
+```{r}
+# unnest tokens 
+# output is bigram
+# n= 2 
+# token = "ngram"  error if you use 'bigram'
+tweets_token = tweets %>% 
+  unnest_tokens(input = text,
+                output = bigram,
+                n=2, 
+                token = "ngrams"
+                )
+
+```
+
+
+### count n-grams
+
+Let us see what 2 words often appear in this twitter text data. 
+
+```{r}
+
+tweets_token %>% 
+  count( bigram, sort = T)
+```
+
+The most common bigram is a short hyperlink "t.co". Keep in mind that stopwords are 
+still included in this text data.
+
+We can make 2 columns each for the words that comprise of a bigram.
+
+```{r}
+tweet_bigrams = tweets_token %>% 
+  separate( bigram, c("word1","word2"), sep = " ")
+
+
+twitter_bigram_filtered = tweet_bigrams %>% 
+  # check to see if word1 & word2 are not in stopwords 
+  filter( !word1 %in% stop_words$word) %>% 
+  filter(!word2 %in% stop_words$word) %>% 
+  # drop the website links
+  filter(!word1 %in% c("https","t.co")) %>% 
+  filter(!word2 %in% c("https","t.co"))
+
+```
+
+
+
+Now with filtered clean bigrams we can do a word count
+
+```{r}
+twitter_bigram_counts = twitter_bigram_filtered %>% 
+  count(word1, word2, sort = T)
+
+head(twitter_bigram_counts)
+```
+
+
+what is the words associated when word2 is "reggae" ? 
+
+```{r}
+twitter_bigram_filtered %>% 
+  filter(word2 == "reggae") %>% 
+  count(word1, sort = T)
+```
+
+
+
+
+
+
+
+
+
+Unite the bigrams 
+
+```{r}
+twitter_bigrams_united = twitter_bigram_counts %>% 
+  unite(bigram, word1, word2, sep = " ")
+
+twitter_bigrams_united
+```
+
+
+```{r}
+twitter_bigrams_united %>% 
+  top_n(20) %>% 
+  ggplot(
+    aes(x= n,
+        y= reorder(bigram, n),
+        fill= n
+        )
+  )+
+  geom_col(show.legend = F)+
+  ggdark::dark_mode()
+```
+
+
+
+
+
+
+
+
+
+
+### sentiment ngrams
+
+It appears that the theme behind all the tweets were about reggae music. If word1 was reggae what 
+would the second word be and how often would it appear?
+
+```{r}
+tweet_bigrams %>% 
+  filter(word1 =="reggae") %>% 
+  count(word1, word2, sort = T)
+```
+
+
+load in the sentiment libraries from tidytext, this time we will use the AFINN library
+
+```{r}
+# sentiment
+AFINN = get_sentiments("afinn")
+
+toronto_words = tweet_bigrams %>% 
+  filter(word1 =="toronto") %>% 
+  # add the sentiment library
+  inner_join(AFINN, by= c(word2 = "word")) %>% 
+  count(word2, value,  sort = T)
+
+
+head(toronto_words)
+```
+
+
+word1 being 'toronto', the most common word to follow it is 'please'. 
+Making "Toronto please" which has a positive sentiment value.
+
+
+```{r}
+toronto_words %>% 
+  mutate(contribution = n * value) %>% 
+  arrange( desc( abs( contribution ))) %>% 
+  head( 20 ) %>% 
+  mutate( word2 = reorder(word2, contribution )) %>% 
+  ggplot(
+    aes(x= contribution, 
+        y= word2,
+        fill = contribution > 0)
+  ) +
+  geom_col(show.legend = F) +
+  ggdark::dark_mode() +
+  labs(title = "Tweets with #Toronto, n = 7,985",
+       subtitle = "words split into bigrams",
+       x= "Sentiment value * number of occurrences (contribution)",
+       y= "Words preceded by \"Toronto\"")
+```
+
+
+to look at the negative sentiment word2 that follow 'toronto' arranged by most negative value.
+
+```{r}
+toronto_words %>% 
+  filter(value < 0) %>% 
+  count( word2, value) %>% 
+  arrange( value)
+```
+
+
+
+
+```{r}
+
+tweets %>% 
+  unnest_tokens(input = text, output = word) %>% 
+  inner_join(get_sentiments("bing"), by= 'word') %>% 
+  count(sentiment, word, sort = T) %>% 
+  ungroup() %>% 
+  filter( n >= 50) %>% 
+  mutate( n = ifelse(sentiment == "negative", -n, n)) %>% 
+  mutate( word = reorder(word, n)) %>% 
+  ggplot(
+    aes(x= n,
+        y= word,
+        fill= sentiment
+        )
+  )+
+  geom_col()+
+  labs(title ="Twitter text word sentiment" ,
+       x="contribution to sentiment", y="")+
+  ggdark::dark_mode()
+```
+
+
+
+
+
+## word graph
+
+Visualize the word connections, with nodes and lines, each with weight values.
+
+```{r, message=FALSE, error=FALSE}
+library(igraph)
+library(ggraph)
+
+set.seed(100)
+
+twitter_bigram_counts %>% 
+  filter( n > 50) %>% 
+  igraph::graph_from_data_frame() %>% 
+  ggraph::ggraph(layout = "fr") +
+  geom_edge_link2( aes(edge_alpha= n, 
+                       colour='pink'),
+                 check_overlap = T, 
+                 show.legend = F
+                 ) +
+  geom_node_point(color= "#66ffff") +
+  geom_node_text( aes(label= name), vjust= 1, hjust= 1.2)+
+  ggdark::dark_mode()+
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )
+```
+
+Words centered around "toronto" and "mississauga" whic is part of Toronto and the "gta" also known as the Greater Toronto Area. The graph shows a relationship with the node 'toronto' to  'reggaeallday' to 'reggae' and associated words.
+
+
+
+### pairwise ngrams
+
+Pairwise correlation to look at words frequency and how often the two words are used together.
+The metric used in the phi coefficient, which indicates whether either word appear together than independently.
+
+```{r}
+twitter_cor = twitter_bigram_counts %>% 
+  group_by(word1) %>% 
+  filter( n >= 30) %>% 
+  widyr::pairwise_cor(word1, word2, sort=T)
+```
+
+What words are correlated with the first word 'toronto'.
+
+```{r}
+twitter_cor %>% 
+  filter(item1 =="toronto")
+```
+
+filter on some words of particular interest to see correlation
+
+```{r}
+
+twitter_cor %>% 
+  filter(item1 %in% c("toronto","reggae","tiff","music")) %>% 
+  group_by(item1) %>% 
+  slice_max(correlation, n = 5) %>%
+  ungroup() %>% 
+  mutate(item2 = reorder(item2, correlation)) %>% 
+  ggplot(
+    aes(x= item2,
+        y= correlation, 
+        )
+  )+
+  geom_bar(stat = "identity")+
+  facet_wrap(~item1, scales = "free")+
+  coord_flip()+
+  ggdark::dark_mode()
+```
+
+correlations greater than 0.65
+
+```{r}
+twitter_cor %>% 
+  filter(correlation > .65) %>% 
+  graph_from_data_frame() %>% 
+  ggraph(layout = 'fr') +
+  geom_edge_link2( 
+                 check_overlap = T, 
+                 show.legend = F
+                 ) +
+  geom_node_point(color= "#66ffff", size= 3) +
+  geom_node_text( aes(label= name), 
+                  color='white',  hjust=1, vjust=1,
+                  repel = T)+
+  ggdark::dark_mode()+
+  theme(
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )
+```
+
+
+
+
+
+## Topic Modeling
+
+Topic modeling is classification of documents which aims to find groups within the corpus. 
+
+Using the books from before, tokenization, find the word 'chapter' in the token words, then
+remove the stopwords and count words by book.
+
+```{r}
+book_word_counts = books %>% 
+  group_by(book) %>% 
+  unnest_tokens(input = book_text, output = word ) %>% 
+  mutate(chapter = cumsum(str_detect(word, regex("^chapter", ignore_case = T)))
+         ) %>% 
+  ungroup() %>% 
+  filter( chapter > 0,
+          !word %in% c("project","gutenberg")) %>% 
+  anti_join(stop_words) %>% 
+  count(book, word, sort = T)
+
+head(book_word_counts)
+```
+
+
+for topic models we need a document term matrix in order to use Latent Dirichlet Allocation
+algorithms for out topic modeling.
+
+```{r}
+library(topicmodels)
+
+book_dtm = book_word_counts %>% 
+  cast_dfm(book, word, n)
+
+book_LDA = topicmodels::LDA(book_dtm, k= 4, control= list(seed= 20))
+
+book_LDA_topics = tidy(book_LDA, matrix= 'beta')
+
+head(book_LDA_topics)
+```
+
+Alice is close to 0 for topics 1,2, and 3, but near 1% for topic 4.
+
+
+```{r}
+book_LDA_top5 = book_LDA_topics %>% 
+  group_by(topic) %>% 
+  slice_max(beta, n= 5) %>% 
+  ungroup() %>% 
+  arrange(topic, -beta)
+
+head(book_LDA_top5)
+```
+
+
+```{r}
+book_LDA_top5 %>% 
+  # matches the term to topic with __
+  mutate(term = reorder_within(term, beta, topic)) %>%  
+  ggplot(
+    aes(x= beta,
+        y= term,
+        fill= factor(topic)
+        )
+  )+
+  geom_col(show.legend = F)+
+  facet_wrap(~topic, scales = "free")+
+  scale_y_reordered()+
+  ggdark::dark_mode()+
+  labs(title = "Latent Dirichlet Allocation",
+       subtitle = "words most common within each topic")
+```
+
+
+The words "Alice", "rabbit", "queen" obviously belong to _Alice in Wonderland_ book.
+While the words "denton" and "elizabeth" belong to the _Tales of Space and Time_.
+
+
+---
+
+This concludes the TidyText section of this book.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
