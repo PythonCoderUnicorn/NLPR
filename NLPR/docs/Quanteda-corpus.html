@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>NLPR - 1&nbsp; Quanteda</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./TidyText.html" rel="next">
+<link href="./preface.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Quanteda</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">NLPR</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Welcome to NLPR</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Quanteda-corpus.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Quanteda</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TidyText.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">TidyText</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link active" data-scroll-target="#libraries"><span class="toc-section-number">1.1</span>  Libraries</a></li>
+  <li><a href="#corpus" id="toc-corpus" class="nav-link" data-scroll-target="#corpus"><span class="toc-section-number">1.2</span>  Corpus</a>
+  <ul class="collapse">
+  <li><a href="#docvars" id="toc-docvars" class="nav-link" data-scroll-target="#docvars"><span class="toc-section-number">1.2.1</span>  docvars</a></li>
+  <li><a href="#subset" id="toc-subset" class="nav-link" data-scroll-target="#subset"><span class="toc-section-number">1.2.2</span>  subset</a></li>
+  <li><a href="#reshape" id="toc-reshape" class="nav-link" data-scroll-target="#reshape"><span class="toc-section-number">1.2.3</span>  reshape</a></li>
+  <li><a href="#segment" id="toc-segment" class="nav-link" data-scroll-target="#segment"><span class="toc-section-number">1.2.4</span>  segment</a></li>
+  </ul></li>
+  <li><a href="#tokens" id="toc-tokens" class="nav-link" data-scroll-target="#tokens"><span class="toc-section-number">1.3</span>  Tokens</a>
+  <ul class="collapse">
+  <li><a href="#kwic" id="toc-kwic" class="nav-link" data-scroll-target="#kwic"><span class="toc-section-number">1.3.1</span>  kwic</a></li>
+  <li><a href="#select-tokens" id="toc-select-tokens" class="nav-link" data-scroll-target="#select-tokens"><span class="toc-section-number">1.3.2</span>  select tokens</a></li>
+  <li><a href="#compund-tokens" id="toc-compund-tokens" class="nav-link" data-scroll-target="#compund-tokens"><span class="toc-section-number">1.3.3</span>  compund tokens</a></li>
+  <li><a href="#n-grams" id="toc-n-grams" class="nav-link" data-scroll-target="#n-grams"><span class="toc-section-number">1.3.4</span>  n-grams</a></li>
+  </ul></li>
+  <li><a href="#document-feature-matrix" id="toc-document-feature-matrix" class="nav-link" data-scroll-target="#document-feature-matrix"><span class="toc-section-number">1.4</span>  document-feature-matrix</a>
+  <ul class="collapse">
+  <li><a href="#dfm_keep" id="toc-dfm_keep" class="nav-link" data-scroll-target="#dfm_keep"><span class="toc-section-number">1.4.1</span>  dfm_keep</a></li>
+  <li><a href="#dfm-group" id="toc-dfm-group" class="nav-link" data-scroll-target="#dfm-group"><span class="toc-section-number">1.4.2</span>  dfm group</a></li>
+  <li><a href="#fcm" id="toc-fcm" class="nav-link" data-scroll-target="#fcm"><span class="toc-section-number">1.4.3</span>  FCM</a></li>
+  </ul></li>
+  <li><a href="#stat-analysis" id="toc-stat-analysis" class="nav-link" data-scroll-target="#stat-analysis"><span class="toc-section-number">1.5</span>  Stat Analysis</a>
+  <ul class="collapse">
+  <li><a href="#lexical-diversity" id="toc-lexical-diversity" class="nav-link" data-scroll-target="#lexical-diversity"><span class="toc-section-number">1.5.1</span>  lexical diversity</a></li>
+  <li><a href="#document-feature-similarity" id="toc-document-feature-similarity" class="nav-link" data-scroll-target="#document-feature-similarity"><span class="toc-section-number">1.5.2</span>  document feature similarity</a></li>
+  <li><a href="#relative-frequency-analysis" id="toc-relative-frequency-analysis" class="nav-link" data-scroll-target="#relative-frequency-analysis"><span class="toc-section-number">1.5.3</span>  relative frequency analysis</a></li>
+  <li><a href="#collocation-analysis" id="toc-collocation-analysis" class="nav-link" data-scroll-target="#collocation-analysis"><span class="toc-section-number">1.5.4</span>  collocation analysis</a></li>
+  </ul></li>
+  <li><a href="#advanced-operations" id="toc-advanced-operations" class="nav-link" data-scroll-target="#advanced-operations"><span class="toc-section-number">1.6</span>  Advanced Operations</a>
+  <ul class="collapse">
+  <li><a href="#multi-word-expressions" id="toc-multi-word-expressions" class="nav-link" data-scroll-target="#multi-word-expressions"><span class="toc-section-number">1.6.1</span>  multi-word expressions</a></li>
+  <li><a href="#related-keywords" id="toc-related-keywords" class="nav-link" data-scroll-target="#related-keywords"><span class="toc-section-number">1.6.2</span>  related keywords</a></li>
+  <li><a href="#naive-bayes-classifier" id="toc-naive-bayes-classifier" class="nav-link" data-scroll-target="#naive-bayes-classifier"><span class="toc-section-number">1.6.3</span>  Naive Bayes classifier</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Quanteda</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>The content in the section has most of the content from Quanteda’s tutorials, with each section adapted to be similar but different. Some topics are not covered in this section such as Wordfish, Regular regression classifier, Topic Models, etc. as to not reproduce a full tutorial series but to show main parts of the library.</p>
+<p>This section is for the Quanteda tutorials, which has 3 components (object types).</p>
+<p>The 3 object types:</p>
+<ol type="1">
+<li><p><code>corpus</code> = character strings and variables in data frames, combines texts with document level variables</p></li>
+<li><p><code>tokens</code> = tokens in a list of vectors, keeping the position of words</p></li>
+<li><p><code>document-feature-matrix</code> (DFM) = represents frequencies in a document in a matrix, no positions of words, can use bag-of-words analysis</p></li>
+</ol>
+<section id="libraries" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="libraries"><span class="header-section-number">1.1</span> Libraries</h2>
+<p>Here is the list of Quanteda libraries to install and load in order to follow along with any part of the tutorial.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("quanteda")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("quanteda.textmodels") </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># devtools::install_github("quanteda/quanteda.corpora")</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># devtools::install_github("kbenoit/quanteda.dictionaries")</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("readtext")</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textmodels)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textstats)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.textplots)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda.corpora)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># used for reading in text data</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readtext)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>readtext</code> package supports: plain text files <code>(.txt), JSON, csv, .tab, .tsv, .xml, pdf, .doc, .docx, etc</code> and can be used to read a book for the <a href="https://www.gutenberg.org/">Project Gutenberg</a> for text analysis.</p>
+<p>After you have properly installed and loaded the libraries, you can access the the data corpus available without the need of reading in a <code>csv</code> file. Load in a corpus from Quanteda package and save it as a variable.</p>
+<p>Corpus available:</p>
+<ul>
+<li>data_corpus_amicus</li>
+<li>data_corpus_dailnoconf1991</li>
+<li>data_corpus_EPcoaldebate</li>
+<li>data_corpus_immigrationnews</li>
+<li>data_corpus_inaugural <em>most common used one in tutorial</em></li>
+<li>data_corpus_irishbudget2010</li>
+<li>data_corpus_irishbudgets</li>
+<li>data_corpus_moviereviews</li>
+<li>data_corpus_sotu <em>State of the Union speeches</em></li>
+<li>data_corpus_udhr</li>
+<li>data_corpus_ukmanifestos</li>
+<li>data_corpus_ungd2017</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># to load a corpus and save it as variable name</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>corpus <span class="ot">=</span> <span class="fu">corpus</span>(data_char_ukimmig2010)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="corpus" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="corpus"><span class="header-section-number">1.2</span> Corpus</h2>
+<p>Load the corpus <code>data_corpus_ukmanifestos</code>, which is about British election manifestos on immigration and asylum.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>brit_manifesto <span class="ot">=</span> <span class="fu">corpus</span>(data_corpus_ukmanifestos,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">docvars =</span> <span class="fu">data.frame</span>(<span class="at">party =</span> <span class="fu">names</span>(data_corpus_ukmanifestos)))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>brit_manifesto</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 101 documents and 1 docvar.
+UK_natl_1945_en_Con :
+"CONSERVATIVE PARTY: 1945  Mr. Churchill's Declaration of Pol..."
+
+UK_natl_1945_en_Lab :
+"Labour Party: 1945  Let Us Face the Future: A Declaration of..."
+
+UK_natl_1945_en_Lib :
+"LIBERAL MANIFESTO 1945  20 Point Manifesto of the Liberal Pa..."
+
+UK_natl_1950_en_Con :
+"CONSERVATIVE PARTY: 1950  This is the Road: The Conservative..."
+
+UK_natl_1950_en_Lab :
+"LABOUR PARTY: 1950  Let Us Win Through Together: A Declarati..."
+
+UK_natl_1950_en_Lib :
+"LIBERAL PARTY 1950  No Easy Way: Britain's Problems and the ..."
+
+[ reached max_ndoc ... 95 more documents ]</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( <span class="fu">summary</span>(brit_manifesto) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 Text Types Tokens Sentences               party
+1 UK_natl_1945_en_Con  1752   6679       269 UK_natl_1945_en_Con
+2 UK_natl_1945_en_Lab  1433   5492       234 UK_natl_1945_en_Lab
+3 UK_natl_1945_en_Lib  1208   3729       157 UK_natl_1945_en_Lib
+4 UK_natl_1950_en_Con  2075   8075       366 UK_natl_1950_en_Con
+5 UK_natl_1950_en_Lab  1541   5392       274 UK_natl_1950_en_Lab
+6 UK_natl_1950_en_Lib  1202   3322       136 UK_natl_1950_en_Lib</code></pre>
+</div>
+</div>
+<section id="docvars" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="docvars"><span class="header-section-number">1.2.1</span> docvars</h3>
+<p>Quanteda objects keep information associated with documents, these are ‘document level variables’ and are accessed using <code>docvars()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>inaug_corpus <span class="ot">=</span> <span class="fu">corpus</span>(data_corpus_inaugural)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( <span class="fu">docvars</span>(inaug_corpus))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Year  President FirstName                 Party
+1 1789 Washington    George                  none
+2 1793 Washington    George                  none
+3 1797      Adams      John            Federalist
+4 1801  Jefferson    Thomas Democratic-Republican
+5 1805  Jefferson    Thomas Democratic-Republican
+6 1809    Madison     James Democratic-Republican</code></pre>
+</div>
+</div>
+<p>To extract <code>docvars</code> variables use the <code>field</code> argument or use the <code>$</code> like you normally use on a dataframe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">docvars</span>( inaug_corpus, <span class="at">field =</span> <span class="st">'Year'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 1789 1793 1797 1801 1805 1809 1813 1817 1821 1825 1829 1833 1837 1841 1845
+[16] 1849 1853 1857 1861 1865 1869 1873 1877 1881 1885 1889 1893 1897 1901 1905
+[31] 1909 1913 1917 1921 1925 1929 1933 1937 1941 1945 1949 1953 1957 1961 1965
+[46] 1969 1973 1977 1981 1985 1989 1993 1997 2001 2005 2009 2013 2017 2021</code></pre>
+</div>
+</div>
+<p>Create or update <code>docvars</code>, in this example of creating a column for Century.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>floor_ <span class="ot">=</span> <span class="fu">floor</span>(<span class="fu">docvars</span>(inaug_corpus, <span class="at">field =</span> <span class="st">'Year'</span>) <span class="sc">/</span> <span class="dv">100</span>)<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">docvars</span>(inaug_corpus, <span class="at">field =</span> <span class="st">'Century'</span>) <span class="ot">=</span> floor_</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">docvars</span>(inaug_corpus))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Year  President FirstName                 Party Century
+1 1789 Washington    George                  none      18
+2 1793 Washington    George                  none      18
+3 1797      Adams      John            Federalist      18
+4 1801  Jefferson    Thomas Democratic-Republican      19
+5 1805  Jefferson    Thomas Democratic-Republican      19
+6 1809    Madison     James Democratic-Republican      19</code></pre>
+</div>
+</div>
+</section>
+<section id="subset" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="subset"><span class="header-section-number">1.2.2</span> subset</h3>
+<p>This section is about using the <code>corpus_subset()</code> function on all <code>docvars</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#--- get the Inaugural Speeches</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># inaug_corpus</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#--- look at the docvars</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># head( docvars(inaug_corpus))</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># now we subset the corpus for speeches after 1990</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>inaug_corpus_subset1990s <span class="ot">=</span> <span class="fu">corpus_subset</span>(inaug_corpus, Year <span class="sc">&gt;=</span> <span class="dv">1990</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># check the number of documents </span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(inaug_corpus_subset1990s, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 3 documents and 5 docvars.
+1993-Clinton :
+"My fellow citizens, today we celebrate the mystery of Americ..."
+
+1997-Clinton :
+"My fellow citizens: At this last presidential inauguration o..."
+
+2001-Bush :
+"President Clinton, distinguished guests and my fellow citize..."</code></pre>
+</div>
+</div>
+<p>If you want only specific US Presidents. <em>Note that there are 2 data objects that appear when you type ‘President’, <code>presidents</code> from the {datasets} package and <code>presidential</code> from {ggplot2} package</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select specific US Presidents</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>selected_presidents <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'Obama'</span>,<span class="st">'Clinton'</span>,<span class="st">'Carter'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>democrat_corpus_subset <span class="ot">=</span>  <span class="fu">corpus_subset</span>(inaug_corpus,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                                        President <span class="sc">%in%</span> selected_presidents</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                                        )</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>democrat_corpus_subset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 5 documents and 5 docvars.
+1977-Carter :
+"For myself and for our Nation, I want to thank my predecesso..."
+
+1993-Clinton :
+"My fellow citizens, today we celebrate the mystery of Americ..."
+
+1997-Clinton :
+"My fellow citizens: At this last presidential inauguration o..."
+
+2009-Obama :
+"My fellow citizens: I stand here today humbled by the task b..."
+
+2013-Obama :
+"Vice President Biden, Mr. Chief Justice, Members of the Unit..."</code></pre>
+</div>
+</div>
+</section>
+<section id="reshape" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="reshape"><span class="header-section-number">1.2.3</span> reshape</h3>
+<p>You can reshape the document paragraphs to sentences, which can be restored even after being modified by functions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>UN_corpus <span class="ot">=</span> <span class="fu">corpus</span>(data_corpus_ungd2017)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 196 documents, 7 docvars</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(UN_corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 6 documents and 7 docvars.
+Afghanistan :
+"As I stand here before the General Assembly today, I am remi..."
+
+Angola :
+"On behalf of the Government of the Republic of Angola, allow..."
+
+Albania :
+"How many times has it happened that humankind has been confr..."
+
+Andorra :
+"I would like to begin by congratulating the President, Mr. M..."
+
+United Arab Emirates :
+"I would like to begin by congratulating the President on his..."
+
+Argentina :
+"I am very honoured and very happy to be here today represent..."</code></pre>
+</div>
+</div>
+<p>Now change the document into sentences</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>UN_corpus_sentences <span class="ot">=</span> <span class="fu">corpus_reshape</span>(UN_corpus, <span class="at">to=</span> <span class="st">'sentences'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(UN_corpus_sentences)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 6 documents and 7 docvars.
+Afghanistan.1 :
+"As I stand here before the General Assembly today, I am remi..."
+
+Afghanistan.2 :
+"Shaped by the Great Depression and tempered by the carnage o..."
+
+Afghanistan.3 :
+"The United Nations, the International Monetary Fund, the Wor..."
+
+Afghanistan.4 :
+"There can be little doubt that today the scale, scope and sp..."
+
+Afghanistan.5 :
+"But future historians will judge those institutions on how t..."
+
+Afghanistan.6 :
+"As global leaders, we seek certainty and familiarity in the ..."</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># there is now 16806 number of documents</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To change back</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>UN_corpus_doc <span class="ot">=</span> <span class="fu">corpus_reshape</span>(UN_corpus_sentences, <span class="at">to=</span> <span class="st">'documents'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="segment" class="level3" data-number="1.2.4">
+<h3 data-number="1.2.4" class="anchored" data-anchor-id="segment"><span class="header-section-number">1.2.4</span> segment</h3>
+<p>You can extract segments of text and tags from documents, the use-case for this is analyzing documents or transcripts separately.</p>
+<p>Document sections</p>
+<p>The created mini text document that has 6 lines, which has section that uses “##” as a pattern to organize the text into new lines. Here is what the text file contains.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">##INTRO This is the introduction.</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="do">##DOC1 This is the first document.  Second sentence in Doc 1.</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="do">##DOC3    Third document starts here.  End of third document.</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="do">##INTRO                                               Document</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">##NUMBER                                      Two starts before</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="do">##NUMBER                                                 Three.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># read in a simple text file as shown above</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>txt_file <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_file</span>(<span class="st">'./doctext.txt'</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># need to convert it to a corpus object</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>txt_file_corpus <span class="ot">=</span> <span class="fu">corpus</span>(txt_file)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># provide the pattern of ## in order for it to be separated into new lines</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>txt_seg <span class="ot">=</span> <span class="fu">corpus_segment</span>(txt_file_corpus, <span class="at">pattern =</span> <span class="st">"##*"</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>txt_seg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 6 documents and 1 docvar.
+text1.1 :
+"This is the introduction."
+
+text1.2 :
+"This is the first document.  Second sentence in Doc 1."
+
+text1.3 :
+"Third document starts here.  End of third document."
+
+text1.4 :
+"Document"
+
+text1.5 :
+"Two starts before"
+
+text1.6 :
+"Three."</code></pre>
+</div>
+</div>
+<p>By providing a pattern value for the <code>corpus_segment()</code> you can do regular expressions for removing words and symbols.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># transform text into corpus</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>corp_speeches <span class="ot">=</span> <span class="fu">corpus</span>(<span class="st">"Mr. Samwell Tarly: Text Analysis.</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="st">                        Mx. Jones: More text analysis?</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="st">                        Mr. Samwell Tarly: we will do it again, and again."</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># use corpus segment with regular expression pattern matching</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>corp_speakers <span class="ot">=</span> <span class="fu">corpus_segment</span>(corp_speeches, </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>                                <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">b[A-Z].+</span><span class="sc">\\</span><span class="st">s[A-Z][a-z]+:"</span>, </span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>                                <span class="at">valuetype =</span> <span class="st">"regex"</span>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co"># bind the rows together</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">docvars</span>(corp_speakers), <span class="at">text =</span> <span class="fu">as.character</span>(corp_speakers))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   pattern                            text
+text1.1 Mr. Samwell Tarly:                  Text Analysis.
+text1.2         Mx. Jones:             More text analysis?
+text1.3 Mr. Samwell Tarly: we will do it again, and again.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tokens" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="tokens"><span class="header-section-number">1.3</span> Tokens</h2>
+<p>Tokens segments texts in a corpus (words or sentences) by word boundaries.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step 1 - load in corpus</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>sotu_corpus <span class="ot">=</span> <span class="fu">corpus</span>(data_corpus_sotu)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># step 2 - pass in the corpus into tokens function</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># using the tokens() you can remove punctuation and numbers</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>sotu_corpus_tokens <span class="ot">=</span> <span class="fu">tokens</span>(sotu_corpus, </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">remove_punct =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                            <span class="at">remove_symbols =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">remove_numbers =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">remove_url =</span> <span class="cn">TRUE</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>                            )</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_corpus_tokens, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 3 documents and 6 docvars.
+Washington-1790 :
+ [1] "Fellow-Citizens" "of"              "the"             "Senate"         
+ [5] "and"             "House"           "of"              "Representatives"
+ [9] "I"               "embrace"         "with"            "great"          
+[ ... and 1,073 more ]
+
+Washington-1790b :
+ [1] "Fellow-Citizens" "of"              "the"             "Senate"         
+ [5] "and"             "House"           "of"              "Representatives"
+ [9] "In"              "meeting"         "you"             "again"          
+[ ... and 1,388 more ]
+
+Washington-1791 :
+ [1] "Fellow-Citizens" "of"              "the"             "Senate"         
+ [5] "and"             "House"           "of"              "Representatives"
+ [9] "In"              "vain"            "may"             "we"             
+[ ... and 2,285 more ]</code></pre>
+</div>
+</div>
+<section id="kwic" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="kwic"><span class="header-section-number">1.3.1</span> kwic</h3>
+<p>Keyword-in-contexts (kwic) is the method used to search for keywords in corpus documents.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- continue using the tokenized corpus of State of the Union</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sotu_corpus_tokens</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># keyword to search the corpus follows the pattern argument</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># our keyword here will be 'love'</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># save kwic in a variable</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>keyword_search <span class="ot">=</span>  <span class="fu">kwic</span>(sotu_corpus_tokens, <span class="at">pattern =</span> <span class="st">'love'</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(keyword_search)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                    
+ [Washington-1790b, 1327]        wisdom and animated by the | love |
+  [Washington-1793, 1122]  equity proceeding from a sincere | love |
+  [Washington-1795, 1011] acknowledgment to Heaven and pure | love |
+    [Jefferson-1801, 923]      of happiness educated in the | love |
+     [Jefferson-1807, 37]     earlier period than usual The | love |
+   [Jefferson-1808, 2621] unshaken by difficulties in their | love |
+                                       
+ of your country In whatever           
+ of peace and a liberality             
+ to our country to unite               
+ of order habituated to self-government
+ of peace so much cherished            
+ of liberty obedience to law           </code></pre>
+</div>
+</div>
+<p>You can search for multiple words by using a vector.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>search_words <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'love'</span>,<span class="st">'science'</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>searched_words <span class="ot">=</span> <span class="fu">kwic</span>(sotu_corpus_tokens, <span class="at">pattern =</span> search_words)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(searched_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                       
+   [Washington-1790, 641]   patronage than the promotion of | science |
+ [Washington-1790b, 1327]        wisdom and animated by the |  love   |
+  [Washington-1793, 1122]  equity proceeding from a sincere |  love   |
+  [Washington-1795, 1011] acknowledgment to Heaven and pure |  love   |
+  [Washington-1796, 1910]               of our youth in the | science |
+    [Jefferson-1801, 923]      of happiness educated in the |  love   |
+                                       
+ and literature Knowledge is in        
+ of your country In whatever           
+ of peace and a liberality             
+ to our country to unite               
+ of government In a republic           
+ of order habituated to self-government</code></pre>
+</div>
+</div>
+<p>For multi-word expressions, use the <code>phrase()</code> function after the pattern argument.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>us_searchword <span class="ot">=</span> <span class="fu">kwic</span>(sotu_corpus_tokens, <span class="at">pattern =</span>  <span class="fu">phrase</span>(<span class="st">"United States"</span>))</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(us_searchword)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                              
+    [Washington-1790, 47:48]      to the Constitution of the | United States |
+  [Washington-1790, 397:398] aggressors The interests of the | United States |
+  [Washington-1790, 520:521]     weights and measures of the | United States |
+  [Washington-1790, 956:957]  character and interests of the | United States |
+ [Washington-1790b, 520:521]              on the part of the | United States |
+ [Washington-1790b, 743:744]     and security enjoyed by the | United States |
+                                   
+ of which official information has 
+ require that our intercourse with 
+ is an object of great             
+ are so obviously so deeply        
+ renewed their violences with fresh
+ reminds us at the same            </code></pre>
+</div>
+</div>
+<p>To view all of the keyword search results in a RStudio window.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># view(us_searchword)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="select-tokens" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="select-tokens"><span class="header-section-number">1.3.2</span> select tokens</h3>
+<p>You can remove tokens that you do not want or interest in, this can be either on its own or in combination with <code>stopwords()</code> function.</p>
+<p>So far we have tokenized the State of the Union corpus and did some keyword searched, but the corpus still has <code>stopwords</code> inside the text, to remove them we use the function <code>tokens_select()</code> and pass in the stopwords along with the language parameter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- continue using sotu corpus</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>sotu_corpus_tokens_clean <span class="ot">=</span> <span class="fu">tokens_select</span>(sotu_corpus_tokens,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">pattern =</span>  <span class="fu">stopwords</span>(<span class="st">'en'</span>), <span class="co"># 'en' for English</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">selection =</span> <span class="st">'remove'</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_corpus_tokens_clean, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 3 documents and 6 docvars.
+Washington-1790 :
+ [1] "Fellow-Citizens" "Senate"          "House"           "Representatives"
+ [5] "embrace"         "great"           "satisfaction"    "opportunity"    
+ [9] "now"             "presents"        "congratulating"  "present"        
+[ ... and 488 more ]
+
+Washington-1790b :
+ [1] "Fellow-Citizens" "Senate"          "House"           "Representatives"
+ [5] "meeting"         "feel"            "much"            "satisfaction"   
+ [9] "able"            "repeat"          "congratulations" "favorable"      
+[ ... and 619 more ]
+
+Washington-1791 :
+ [1] "Fellow-Citizens" "Senate"          "House"           "Representatives"
+ [5] "vain"            "may"             "expect"          "peace"          
+ [9] "Indians"         "frontiers"       "long"            "lawless"        
+[ ... and 1,058 more ]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---- equivalent function call</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  tokens_remove( sotu_corpus_tokens, pattern= stopwords('en'), padding= FALSE )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For very specific words that interest you in token selection, you can pass in a vector of those words.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>specific_words <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'love'</span>,<span class="st">'scien*'</span>,<span class="st">'reason'</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>specific_tokens_select <span class="ot">=</span> <span class="fu">tokens_select</span>(sotu_corpus_tokens,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">pattern =</span> specific_words,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">padding =</span> <span class="cn">FALSE</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                                       )</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Tokens consisting of 241 documents and 6 docvars.</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(specific_tokens_select)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 6 documents and 6 docvars.
+Washington-1790 :
+[1] "reason"  "science"
+
+Washington-1790b :
+[1] "love"
+
+Washington-1791 :
+character(0)
+
+Washington-1792 :
+[1] "reason"
+
+Washington-1793 :
+[1] "reason" "love"  
+
+Washington-1794 :
+[1] "reason" "reason"</code></pre>
+</div>
+</div>
+<p>To see the words that surround the selected token, use the window argument, here the window is 5 words.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>window_token_select <span class="ot">=</span> <span class="fu">tokens_select</span>(sotu_corpus_tokens, </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">pattern =</span> specific_words, </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">padding =</span> F, </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">window =</span> <span class="dv">5</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(window_token_select, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 3 documents and 6 docvars.
+Washington-1790 :
+ [1] "regard"    "to"        "economy"   "There"     "was"       "reason"   
+ [7] "to"        "hope"      "that"      "the"       "pacific"   "patronage"
+[ ... and 10 more ]
+
+Washington-1790b :
+ [1] "wisdom"   "and"      "animated" "by"       "the"      "love"    
+ [7] "of"       "your"     "country"  "In"       "whatever"
+
+Washington-1791 :
+character(0)</code></pre>
+</div>
+</div>
+</section>
+<section id="compund-tokens" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="compund-tokens"><span class="header-section-number">1.3.3</span> compund tokens</h3>
+<p>Similar to what we already did, there is a <code>tokens_compound()</code> function that uses a vector for tokens to search. This will look just like the <code>kwic()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---- kwic() </span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>searched_words2 <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"americ*"</span>, <span class="st">"american people"</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>america_kwic <span class="ot">=</span> <span class="fu">kwic</span>(sotu_corpus_tokens, <span class="at">pattern =</span> searched_words2)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(america_kwic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                          
+  [Washington-1790b, 67]            by a considerable rise of | American |
+   [Washington-1794, 22]               of Heaven by which the | American |
+ [Washington-1794, 1988]     over that precious depository of | American |
+  [Washington-1795, 732]         nations of Europe with their | American |
+  [Washington-1796, 773]         the protection and relief of | American |
+      [Adams-1797, 1583] obligations The numerous captures of | American |
+                                   
+ stock abroad as well as           
+ people became a nation when       
+ happiness the Constitution of the 
+ dependencies have been involved in
+ sea-men agents were appointed one 
+ vessels by the cruisers of        </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---- tokens_compound</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>america_token_compound <span class="ot">=</span> <span class="fu">tokens_compound</span>(sotu_corpus_tokens,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">pattern =</span> <span class="fu">phrase</span>(searched_words2) </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># head(america_token_compound)</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( <span class="fu">kwic</span>(america_token_compound, <span class="at">pattern =</span> searched_words2) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 6 matches.                                                                               
+  [Washington-1790b, 67]            by a considerable rise of |    American    
+   [Washington-1794, 22]               of Heaven by which the | American_people
+ [Washington-1794, 1987]     over that precious depository of |    American    
+  [Washington-1795, 732]         nations of Europe with their |    American    
+  [Washington-1796, 773]         the protection and relief of |    American    
+      [Adams-1797, 1583] obligations The numerous captures of |    American    
+                                     
+ | stock abroad as well as           
+ | became a nation when we           
+ | happiness the Constitution of the 
+ | dependencies have been involved in
+ | sea-men agents were appointed one 
+ | vessels by the cruisers of        </code></pre>
+</div>
+</div>
+</section>
+<section id="n-grams" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="n-grams"><span class="header-section-number">1.3.4</span> n-grams</h3>
+<p>You can make n-grams in any length from tokens using the <code>tokens_ngrams()</code> which makes a sequence of tokens.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -- pass in the sotu corpus tokens object</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    n-gram will be from 2 to 4</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>sotu_corpus_ngrams <span class="ot">=</span> <span class="fu">tokens_ngrams</span>(sotu_corpus_tokens, <span class="at">n=</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co"># for simplicity, the 1st document is shown</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1st document, 20 of the docvars n-grams</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_corpus_ngrams[[<span class="dv">1</span>]], <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Fellow-Citizens_of" "of_the"             "the_Senate"        
+ [4] "Senate_and"         "and_House"          "House_of"          
+ [7] "of_Representatives" "Representatives_I"  "I_embrace"         
+[10] "embrace_with"       "with_great"         "great_satisfaction"
+[13] "satisfaction_the"   "the_opportunity"    "opportunity_which" 
+[16] "which_now"          "now_presents"       "presents_itself"   
+[19] "itself_of"          "of_congratulating" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># head(sotu_corpus_ngrams, 3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can skip n-grams</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>sotu_corpus_ngrams_skip <span class="ot">=</span> <span class="fu">tokens_ngrams</span>(sotu_corpus_tokens,</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">n=</span> <span class="dv">2</span>,</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">skip =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                                        )</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># notice the document returns [1][4] ...</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_corpus_ngrams_skip, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 2 documents and 6 docvars.
+Washington-1790 :
+ [1] "Fellow-Citizens_the"    "Fellow-Citizens_Senate" "of_Senate"             
+ [4] "of_and"                 "the_and"                "the_House"             
+ [7] "Senate_House"           "Senate_of"              "and_of"                
+[10] "and_Representatives"    "House_Representatives"  "House_I"               
+[ ... and 2,153 more ]
+
+Washington-1790b :
+ [1] "Fellow-Citizens_the"    "Fellow-Citizens_Senate" "of_Senate"             
+ [4] "of_and"                 "the_and"                "the_House"             
+ [7] "Senate_House"           "Senate_of"              "and_of"                
+[10] "and_Representatives"    "House_Representatives"  "House_In"              
+[ ... and 2,783 more ]</code></pre>
+</div>
+</div>
+<p>Selective ngrams</p>
+<p>Selecting ngrams based on a keyword, phrase or a vector of words is done by using the <code>tokens_compound()</code> and <code>tokens_select()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- select phrases that have 'not'</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>phrase_not <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"not *"</span>,<span class="st">"not_*"</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>sotu_not_ngrams <span class="ot">=</span> <span class="fu">tokens_compound</span>(sotu_corpus_tokens,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">pattern =</span> <span class="fu">phrase</span>(phrase_not)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>sotu_not_ngrams_select <span class="ot">=</span> <span class="fu">tokens_select</span>(sotu_not_ngrams, </span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>                                       <span class="co"># need to include again</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">pattern =</span> <span class="fu">phrase</span>(phrase_not)</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>                                       )</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_not_ngrams_select, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 3 documents and 6 docvars.
+Washington-1790 :
+[1] "not_but"     "not_only"    "not_I"       "not_forbear"
+
+Washington-1790b :
+[1] "not_only"      "not_fail"      "not_less"      "not_be"       
+[5] "not_overlook"  "not_less"      "not_think"     "not_desirable"
+[9] "not_merely"   
+
+Washington-1791 :
+[1] "not_fail"    "not_only"    "not_forbear" "not_fail"   </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="document-feature-matrix" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="document-feature-matrix"><span class="header-section-number">1.4</span> document-feature-matrix</h2>
+<p>A document-feature-matrix (dfm) is made from tokens objects. Unlike all the work previously the objects returned were documents in a row with <code>docvars</code> for each tokens operation performed. A <code>dfm</code> returns a dataframe like object with features and docvars.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -- continue to use the sotu tokens object where punctuation etc. was removed</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sotu_corpus_tokens</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>sotu_corpus_dfm <span class="ot">=</span> <span class="fu">dfm</span>(sotu_corpus_tokens)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_corpus_dfm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 6 documents, 29,008 features (97.48% sparse) and 6 docvars.
+                  features
+docs               fellow-citizens  of the senate and house representatives  i
+  Washington-1790                1  69  97      2  41     3               3 11
+  Washington-1790b               1  89 122      2  45     3               3  8
+  Washington-1791                1 159 242      3  73     3               3  6
+  Washington-1792                1 139 195      2  56     3               3 21
+  Washington-1793                1 132 180      2  49     3               3 12
+  Washington-1794                1 187 273      2  86     4               3 18
+                  features
+docs               embrace with
+  Washington-1790        1   11
+  Washington-1790b       0   15
+  Washington-1791        0   27
+  Washington-1792        0   20
+  Washington-1793        0   24
+  Washington-1794        0   17
+[ reached max_nfeat ... 28,998 more features ]</code></pre>
+</div>
+</div>
+<p>Common functions to use with a document-feature-matrix:</p>
+<ul>
+<li><code>docnames( )</code></li>
+<li><code>featnames( )</code></li>
+<li><code>rowSums( )</code></li>
+<li><code>colSums( )</code></li>
+</ul>
+<p>To get the most frequent features can be retrieved by using <code>topfeatures()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- this corpus dfm has stopwords included</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># topfeatures(sotu_corpus_dfm)</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="co">#-- to use the cleaned corpus need to make it a dfm</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>sotu_corpus_tokens_clean_dfm <span class="ot">=</span> <span class="fu">dfm</span>(sotu_corpus_tokens_clean)</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="fu">topfeatures</span>(sotu_corpus_tokens_clean_dfm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>government     states   congress     united        can       year     people 
+      7444       6942       5795       5181       4845       4617       4286 
+      upon    country       must 
+      4229       3619       3600 </code></pre>
+</div>
+</div>
+<p>To get a proportion of a feature within documents total count, use the <code>dfm_weight(scheme='prop')</code>, which is a relative frequency. The scheme by default is ‘count’.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dfm_weight(sotu_corpus_dfm, scheme = 'prop')</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dfm_weight</span>(sotu_corpus_tokens_clean_dfm, <span class="at">scheme =</span> <span class="st">'prop'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 241 documents, 28,840 features (94.28% sparse) and 6 docvars.
+                  features
+docs               fellow-citizens      senate       house representatives
+  Washington-1790     0.0020000000 0.004000000 0.006000000     0.006000000
+  Washington-1790b    0.0015847861 0.003169572 0.004754358     0.004754358
+  Washington-1791     0.0009345794 0.002803738 0.002803738     0.002803738
+  Washington-1792     0.0010427529 0.002085506 0.003128259     0.003128259
+  Washington-1793     0.0011098779 0.002219756 0.003329634     0.003329634
+  Washington-1794     0.0007485030 0.001497006 0.002994012     0.002245509
+                  features
+docs               embrace       great satisfaction  opportunity         now
+  Washington-1790    0.002 0.008000000  0.004000000 0.0020000000 0.002000000
+  Washington-1790b   0     0.006339144  0.001584786 0            0.003169572
+  Washington-1791    0     0            0.002803738 0.0009345794 0          
+  Washington-1792    0     0            0.003128259 0            0.002085506
+  Washington-1793    0     0            0           0.0011098779 0.002219756
+  Washington-1794    0     0.000748503  0           0.0007485030 0.002245509
+                  features
+docs               presents
+  Washington-1790     0.002
+  Washington-1790b    0    
+  Washington-1791     0    
+  Washington-1792     0    
+  Washington-1793     0    
+  Washington-1794     0    
+[ reached max_ndoc ... 235 more documents, reached max_nfeat ... 28,830 more features ]</code></pre>
+</div>
+</div>
+<p>Get the weight of dfm by <code>tf-idf</code> frequency inverse document frequency</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dfm_tfidf</span>(sotu_corpus_tokens_clean_dfm, </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">scheme_df =</span> <span class="st">'inverse'</span>, </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">scheme_tf =</span> <span class="st">'count'</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>          )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 241 documents, 28,840 features (94.28% sparse) and 6 docvars.
+                  features
+docs               fellow-citizens    senate     house representatives
+  Washington-1790        0.5246845 0.1663279 0.2044495       0.4394658
+  Washington-1790b       0.5246845 0.1663279 0.2044495       0.4394658
+  Washington-1791        0.5246845 0.2494919 0.2044495       0.4394658
+  Washington-1792        0.5246845 0.1663279 0.2044495       0.4394658
+  Washington-1793        0.5246845 0.1663279 0.2044495       0.4394658
+  Washington-1794        0.5246845 0.1663279 0.2725993       0.4394658
+                  features
+docs                 embrace       great satisfaction opportunity         now
+  Washington-1790  0.7485486 0.021760342    0.6351181  0.08098705 0.005440086
+  Washington-1790b 0         0.021760342    0.3175591  0          0.010880171
+  Washington-1791  0         0              0.9526772  0.08098705 0          
+  Washington-1792  0         0              0.9526772  0          0.010880171
+  Washington-1793  0         0              0          0.08098705 0.010880171
+  Washington-1794  0         0.005440086    0          0.08098705 0.016320257
+                  features
+docs                presents
+  Washington-1790  0.5559422
+  Washington-1790b 0        
+  Washington-1791  0        
+  Washington-1792  0        
+  Washington-1793  0        
+  Washington-1794  0        
+[ reached max_ndoc ... 235 more documents, reached max_nfeat ... 28,830 more features ]</code></pre>
+</div>
+</div>
+<section id="dfm_keep" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="dfm_keep"><span class="header-section-number">1.4.1</span> dfm_keep</h3>
+<p>You can select features from a dfm using <code>dfm_select()</code> and <code>dfm_keep()</code>, keep the number of features at least the number of times.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -- continue with sotu tokens dfm</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sotu_corpus_tokens_clean_dfm</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>sotu_clean_dfm_keep <span class="ot">=</span> <span class="fu">dfm_keep</span>(sotu_corpus_tokens_clean_dfm,</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">min_nchar=</span> <span class="dv">5</span>)</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_clean_dfm_keep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 6 documents, 26,948 features (97.87% sparse) and 6 docvars.
+                  features
+docs               fellow-citizens senate house representatives embrace great
+  Washington-1790                1      2     3               3       1     4
+  Washington-1790b               1      2     3               3       0     4
+  Washington-1791                1      3     3               3       0     0
+  Washington-1792                1      2     3               3       0     0
+  Washington-1793                1      2     3               3       0     0
+  Washington-1794                1      2     4               3       0     1
+                  features
+docs               satisfaction opportunity presents congratulating
+  Washington-1790             2           1        1              1
+  Washington-1790b            1           0        0              0
+  Washington-1791             3           1        0              0
+  Washington-1792             3           0        0              0
+  Washington-1793             0           1        0              0
+  Washington-1794             0           1        0              0
+[ reached max_nfeat ... 26,938 more features ]</code></pre>
+</div>
+</div>
+<p>See the topfeatures for the min characters</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">topfeatures</span>( sotu_clean_dfm_keep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>government     states   congress     united     people    country      great 
+      7444       6942       5795       5181       4286       3619       3468 
+    public   american      years 
+      3400       2928       2699 </code></pre>
+</div>
+</div>
+<p>If the number of features is below a number threshold that you want, you can use the <code>min_termfreq = n</code> to drop the features below <code>n</code>. In this example we use 10, so any feature that appears less than 10 times in all of the document will be removed. If <code>max_docfreq = 0.1</code>, then features more than 10% of the documents will be removed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  an option is to include docfreq_type= 'prop'</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  for relative proportion</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>sotu_clean_minfreq <span class="ot">=</span> <span class="fu">dfm_trim</span>(sotu_corpus_tokens_clean_dfm,</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">min_termfreq =</span> <span class="dv">10</span>)</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sotu_clean_minfreq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 6 documents, 8,248 features (92.71% sparse) and 6 docvars.
+                  features
+docs               fellow-citizens senate house representatives embrace great
+  Washington-1790                1      2     3               3       1     4
+  Washington-1790b               1      2     3               3       0     4
+  Washington-1791                1      3     3               3       0     0
+  Washington-1792                1      2     3               3       0     0
+  Washington-1793                1      2     3               3       0     0
+  Washington-1794                1      2     4               3       0     1
+                  features
+docs               satisfaction opportunity now presents
+  Washington-1790             2           1   1        1
+  Washington-1790b            1           0   2        0
+  Washington-1791             3           1   0        0
+  Washington-1792             3           0   2        0
+  Washington-1793             0           1   2        0
+  Washington-1794             0           1   3        0
+[ reached max_nfeat ... 8,238 more features ]</code></pre>
+</div>
+</div>
+</section>
+<section id="dfm-group" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="dfm-group"><span class="header-section-number">1.4.2</span> dfm group</h3>
+<p>You can merge documents based on a vector and then takes the sum of feature frequencies.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">#-- Inaugural Speech corpus</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we skipped the corpus() then tokens() step here</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="co"># as you can find the corpus by typing data_&lt;tab&gt;</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>inaug_tokens <span class="ot">=</span> <span class="fu">tokens</span>(data_corpus_inaugural)</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>inaug_dfm <span class="ot">=</span> <span class="fu">dfm</span>(inaug_tokens)</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="co"># head(inaug_dfm)</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a><span class="co"># group by Party</span></span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>dfm_group_party <span class="ot">=</span> <span class="fu">dfm_group</span>(inaug_dfm, <span class="at">groups =</span> Party)</span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dfm_group_party)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 6 documents, 9,439 features (66.93% sparse) and 1 docvar.
+                       features
+docs                    fellow-citizens   of  the senate  and house
+  Democratic                          3 1994 2742      2 1728     4
+  Democratic-Republican              10  945 1416      0  640     0
+  Federalist                          3  140  163      1  130     0
+  none                                1   82  129      1   50     2
+  Republican                          9 3055 4408      5 2386     4
+  Whig                               13  964 1325      6  472     1
+                       features
+docs                    representatives  : among vicissitudes
+  Democratic                          3 54    25            3
+  Democratic-Republican               2  1    16            1
+  Federalist                          2  0     4            0
+  none                                2  2     1            1
+  Republican                          6 86    52            0
+  Whig                                4  1    10            0
+[ reached max_nfeat ... 9,429 more features ]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">docvars</span>(dfm_group_party)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Party
+1            Democratic
+2 Democratic-Republican
+3            Federalist
+4                  none
+5            Republican
+6                  Whig</code></pre>
+</div>
+</div>
+</section>
+<section id="fcm" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="fcm"><span class="header-section-number">1.4.3</span> FCM</h3>
+<p>Feature co-occurrence matrix acts similar to dfm. You can construct a FCM from a DFM or a tokens object using <code>fcm()</code>. topfeatures() returns the most frequently co-occuring words.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download news corpus</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>corp_news <span class="ot">=</span> <span class="fu">download</span>(<span class="st">"data_corpus_guardian"</span>)</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(corp_news)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 4 documents and 9 docvars.
+text136751 :
+"London masterclass on climate change | Do you want to unders..."
+
+text118588 :
+"As colourful fish were swimming past him off the Greek coast..."
+
+text45146 :
+"FTSE 100 | -101.35 | 6708.35 | FTSE All Share | -58.11 | 360..."
+
+text93623 :
+"Australia's education minister, Christopher Pyne, has vowed ..."</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>news_tokens <span class="ot">=</span> <span class="fu">tokens</span>(corp_news,</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">remove_punct =</span> T,</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">remove_separators =</span> T,</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">remove_url =</span> T)</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>news_dfm <span class="ot">=</span> <span class="fu">dfm</span>(news_tokens) </span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>news_dfm <span class="ot">=</span> <span class="fu">dfm_remove</span>(news_dfm , </span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">pattern=</span> <span class="fu">c</span>(<span class="fu">stopwords</span>(<span class="st">"en"</span>), <span class="st">"*-time"</span>, <span class="st">"updated-*"</span>, <span class="st">"gmt"</span>, <span class="st">"bst"</span>,<span class="st">"|"</span>))</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>news_dfm_trim <span class="ot">=</span> <span class="fu">dfm_trim</span>(news_dfm, <span class="at">min_termfreq =</span> <span class="dv">100</span>)</span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a><span class="fu">topfeatures</span>(news_dfm_trim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      said     people        one        new       also         us        can 
+     28412      11168       9879       8024       7901       7090       6972 
+government       year       last 
+      6821       6570       6335 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="stat-analysis" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="stat-analysis"><span class="header-section-number">1.5</span> Stat Analysis</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>sotu_statfreq <span class="ot">=</span> <span class="fu">textstat_frequency</span>(sotu_corpus_tokens_clean_dfm,</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n=</span> <span class="dv">5</span>,</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">groups =</span> President)</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( sotu_statfreq )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     feature frequency rank docfreq  group
+1     states       194    1       8  Adams
+2     united       175    2       8  Adams
+3       upon       165    3       6  Adams
+4   congress       143    4       8  Adams
+5        may       123    5       8  Adams
+6 government       185    1       4 Arthur</code></pre>
+</div>
+</div>
+<section id="lexical-diversity" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="lexical-diversity"><span class="header-section-number">1.5.1</span> lexical diversity</h3>
+<p><code>textstat_lexdiv()</code> calculates various lexical diversity measures based on the number of unique types of tokens and the length of a document. It is useful, for instance, for analyzing speakers’ or writers’ linguistic skills, or the complexity of ideas expressed in documents.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>inaug_tokens_dfm <span class="ot">=</span> <span class="fu">dfm</span>(inaug_tokens) <span class="sc">%&gt;%</span> </span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_remove</span>(<span class="fu">stopwords</span>(<span class="st">'en'</span>))</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="co"># inaug_tokens_dfm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>inaug_lexdiv <span class="ot">=</span> <span class="fu">textstat_lexdiv</span>( inaug_tokens_dfm ) </span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( inaug_lexdiv )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         document       TTR
+1 1789-Washington 0.7806748
+2 1793-Washington 0.9354839
+3      1797-Adams 0.6542056
+4  1801-Jefferson 0.7293973
+5  1805-Jefferson 0.6726014
+6    1809-Madison 0.8326996</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(inaug_lexdiv<span class="sc">$</span>TTR, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>, <span class="at">xlab =</span> <span class="cn">NULL</span>, <span class="at">ylab =</span> <span class="st">"TTR"</span>)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>()</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(inaug_lexdiv)), <span class="at">labels =</span> inaug_dfm<span class="sc">$</span>President )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Quanteda-corpus_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="document-feature-similarity" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="document-feature-similarity"><span class="header-section-number">1.5.2</span> document feature similarity</h3>
+<p><code>textstat_dist()</code> calculates similarities of documents or features for various measures. Its output is compatible with R’s <code>dist()</code>, so hierarchical clustering can be performed without any transformation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>inaug_dfm_dist <span class="ot">=</span> <span class="fu">as.dist</span>( inaug_tokens_dfm )  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in as.dist.default(inaug_tokens_dfm): non-square matrix</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>inaug_clustering <span class="ot">=</span> <span class="fu">hclust</span>( inaug_dfm_dist )</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>( inaug_clustering, <span class="at">xlab=</span> <span class="st">"Distance"</span>, <span class="at">ylab=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Quanteda-corpus_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="relative-frequency-analysis" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="relative-frequency-analysis"><span class="header-section-number">1.5.3</span> relative frequency analysis</h3>
+<p>Also known as keyness, Keyness is a signed two-by-two association scores originally implemented in WordSmith to identify frequent words in documents in a target and reference group.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>sotu_keyness <span class="ot">=</span> <span class="fu">textstat_keyness</span>( sotu_corpus_dfm ) </span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a><span class="fu">textplot_keyness</span>( sotu_keyness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Quanteda-corpus_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="collocation-analysis" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="collocation-analysis"><span class="header-section-number">1.5.4</span> collocation analysis</h3>
+<p>A collocation analysis allows us to identify contiguous collocations of words. One of the most common types of multi-word expressions are proper names, which can be identified simply based on capitalization in English texts.</p>
+<p>Example from Quanteda, not run here.</p>
+<pre><code>
+corp_news &lt;- download("data_corpus_guardian")
+
+
+toks_news &lt;- tokens(corp_news, remove_punct = TRUE)
+
+tstat_col_caps &lt;- tokens_select(toks_news, pattern = "^[A-Z]", 
+                                valuetype = "regex", 
+                                case_insensitive = FALSE, 
+                                padding = TRUE) %&gt;% 
+                  textstat_collocations(min_count = 100)
+                  
+head(tstat_col_caps, 20)</code></pre>
+</section>
+</section>
+<section id="advanced-operations" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="advanced-operations"><span class="header-section-number">1.6</span> Advanced Operations</h2>
+<p>We can compute the similarities between authors by grouping their documents and comparing them with all other authors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>twitter_df <span class="ot">=</span> <span class="fu">read_csv2</span>(<span class="st">"./TorontoTweetsText.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Using "','" as decimal and "'.'" as grouping mark. Use `read_delim()` for more control.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 7985 Columns: 1
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+chr (1): text
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(twitter_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 1
+  text                                                                          
+  &lt;chr&gt;                                                                         
+1 "📌 @mlleperez\n#Toronto #TheSix #EstudiaenCanadá🇨🇦 https://t.co/FzjSa3PhDv"  
+2 "September marks a huge milestone @DistilleryTO …190 years old! Come explore …
+3 "The average home price rising again in Toronto.\nhttps://t.co/NjHh7B5Odo\n#t…
+4 "Sault News: Real estate prices expected to remain stable | CTV News\nhttps:/…
+5 "Saturday vibes! #Toronto https://t.co/RKEosXP6X7"                            
+6 "#Toronto head over to #BloorWest to support #Ukraine️ this afternoon! https:/…</code></pre>
+</div>
+</div>
+<p>construct a corpus</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>twitter_corpus <span class="ot">=</span> <span class="fu">corpus</span>(twitter_df)</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(twitter_corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 6 documents.
+text1 :
+"📌 @mlleperez #Toronto #TheSix #EstudiaenCanadá🇨🇦 https://t.c..."
+
+text2 :
+"September marks a huge milestone @DistilleryTO …190 years ol..."
+
+text3 :
+"The average home price rising again in Toronto. https://t.co..."
+
+text4 :
+"Sault News: Real estate prices expected to remain stable | C..."
+
+text5 :
+"Saturday vibes! #Toronto https://t.co/RKEosXP6X7"
+
+text6 :
+"#Toronto head over to #BloorWest to support #Ukraine️ this a..."</code></pre>
+</div>
+</div>
+<p>Construct a document-feature matrix, and remove tags, links, and English stopwords.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>twitter_dfm <span class="ot">=</span> twitter_corpus <span class="sc">%&gt;%</span> </span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tokenize and clean text</span></span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens</span>(<span class="at">remove_punct =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_symbols =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_url =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">remove_separators =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make it into a dfm</span></span>
+<span id="cb95-8"><a href="#cb95-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb95-9"><a href="#cb95-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove stopwords</span></span>
+<span id="cb95-10"><a href="#cb95-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_remove</span>(<span class="fu">stopwords</span>(<span class="st">"en"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb95-11"><a href="#cb95-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># extra string cleaning</span></span>
+<span id="cb95-12"><a href="#cb95-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm_remove</span>(<span class="at">pattern=</span> <span class="fu">c</span>(<span class="st">"#*"</span>,<span class="st">"@*"</span>, <span class="st">"rt"</span>,<span class="st">"RT"</span>,<span class="st">"H/T"</span>,<span class="st">"h/t"</span>,<span class="st">".com"</span>,<span class="st">".ca"</span>,<span class="st">"amp"</span>))</span>
+<span id="cb95-13"><a href="#cb95-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-14"><a href="#cb95-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-15"><a href="#cb95-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(twitter_dfm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 6 documents, 16,469 features (99.96% sparse) and 0 docvars.
+       features
+docs    🇨🇦 september marks huge milestone 190 years old come explore
+  text1  1         0     0    0         0   0     0   0    0       0
+  text2  0         1     1    1         1   1     1   1    1       1
+  text3  0         0     0    0         0   0     0   0    0       0
+  text4  0         0     0    0         0   0     0   0    0       0
+  text5  0         0     0    0         0   0     0   0    0       0
+  text6  0         0     0    0         0   0     0   0    0       0
+[ reached max_nfeat ... 16,459 more features ]</code></pre>
+</div>
+</div>
+<p>see top features</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">topfeatures</span>( twitter_dfm )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>toronto  reggae  canada     new    best     now    live       h    2022   today 
+   1337     503     477     391     376     371     355     346     340     326 </code></pre>
+</div>
+</div>
+<p>The Twitter data used in this section has only the text of the tweets. If the full data file containing screen names, then the following would work, which allows for clustering users in a dendrogram.</p>
+<pre><code># --- group twitter users by screen name
+twitter_dfm_groups = dfm_group(twitter_dfm, groups = screen_name)
+
+#--- select tweets that meet a criteria
+#     remove tweets with a frequency &lt; 10 and tweets with &gt;50 tokens in total
+
+twitter_select = twitter_dfm_groups %&gt;% 
+    dfm_select( min_nchar = 2) %&gt;% 
+    dfm_trim( min_termfreq = 10)
+    
+twitter_select = twitter_select[ ntoken( twitter_select ) &gt; 50 , ]
+
+#-- clustering
+
+twitter_dist = as.dist(  textstat_dist( twitter_select ))
+twitter_clust = hclust( twitter_dist )
+
+plot( twitter_clust )</code></pre>
+<section id="multi-word-expressions" class="level3" data-number="1.6.1">
+<h3 data-number="1.6.1" class="anchored" data-anchor-id="multi-word-expressions"><span class="header-section-number">1.6.1</span> multi-word expressions</h3>
+<p>We can compound multi-word expressions through collocation analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>text <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Everyone loves New York!"</span>, <span class="st">"The home office of Barak Obama was in the White House."</span>, <span class="st">"European Union is also known as the EU."</span>,<span class="st">"Soon it will be Black Friday, crazy time."</span>)</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Everyone loves New York!"                              
+[2] "The home office of Barak Obama was in the White House."
+[3] "European Union is also known as the EU."               
+[4] "Soon it will be Black Friday, crazy time."             </code></pre>
+</div>
+</div>
+<p>now tokenize the text and clean the text</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>text_corpus <span class="ot">=</span> <span class="fu">corpus</span>(text)</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>text_tokens <span class="ot">=</span> <span class="fu">tokens</span>(text_corpus, </span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">remove_punct =</span> T, </span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">remove_separators =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_remove</span>(<span class="fu">stopwords</span>(<span class="st">"en"</span>))</span>
+<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-8"><a href="#cb102-8" aria-hidden="true" tabindex="-1"></a>text_tokens</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tokens consisting of 4 documents.
+text1 :
+[1] "Everyone" "loves"    "New"      "York"    
+
+text2 :
+[1] "home"   "office" "Barak"  "Obama"  "White"  "House" 
+
+text3 :
+[1] "European" "Union"    "also"     "known"    "EU"      
+
+text4 :
+[1] "Soon"   "Black"  "Friday" "crazy"  "time"  </code></pre>
+</div>
+</div>
+<p>One of the most common type of multi-word expressions is proper names, which we can select simply based on capitalization in English texts.</p>
+<pre><code># this text example is too small to run but the code is valid
+
+text_tokens2 = tokens_select(text_tokens,
+              pattern = "^[A-Z]",
+              valuetype = "regex",
+              case_insensitive = FALSE
+              )
+
+text_collocat = textstat_collocations( text_tokens2, tolower = FALSE)
+
+tokens_compound(text_tokens, pattern = text_collocat[ text_collocat$z &gt; 3])</code></pre>
+<p>once you have all your tokens compounded, you can search where they are in the corpus.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is an imperfect example but shows the steps to use in large corpus</span></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kwic</span>(text_tokens, <span class="at">pattern =</span> <span class="st">"Barak"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Keyword-in-context with 1 match.                                                   
+ [text2, 3] home office | Barak | Obama White House</code></pre>
+</div>
+</div>
+</section>
+<section id="related-keywords" class="level3" data-number="1.6.2">
+<h3 data-number="1.6.2" class="anchored" data-anchor-id="related-keywords"><span class="header-section-number">1.6.2</span> related keywords</h3>
+<p>We can identify related words of keywords based on their distance in the documents.</p>
+<p>Just a reminder of steps for a corpus to be ready for the <code>textstat_keyness()</code></p>
+<ul>
+<li>tokenize a corpus with <code>tokens()</code></li>
+<li>clean tokens <code>tokens_remove()</code></li>
+<li>transform tokens into a <code>dfm()</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>inaug_keyness <span class="ot">=</span> <span class="fu">textstat_keyness</span>( inaug_tokens_dfm )</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(inaug_keyness)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        feature     chi2            p n_target n_reference
+1     immutable 76.44488 0.000000e+00        2           1
+2   impressions 76.44488 0.000000e+00        2           1
+3  providential 76.44488 0.000000e+00        2           1
+4 deliberations 36.75264 1.341089e-09        2           4
+5    peculiarly 36.75264 1.341089e-09        2           4
+6     pecuniary 36.75264 1.341089e-09        2           4</code></pre>
+</div>
+</div>
+</section>
+<section id="naive-bayes-classifier" class="level3" data-number="1.6.3">
+<h3 data-number="1.6.3" class="anchored" data-anchor-id="naive-bayes-classifier"><span class="header-section-number">1.6.3</span> Naive Bayes classifier</h3>
+<p>Naive Bayes is a supervised model usually used to classify documents into two or more categories. We train the classifier using class labels attached to documents, and predict the most likely class(es) of new unlabeled documents.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages('caret')</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>movie_review <span class="ot">=</span> <span class="fu">corpus</span>(data_corpus_moviereviews)</span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a><span class="co"># head(movie_review)</span></span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-8"><a href="#cb109-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(movie_review, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Corpus consisting of 2000 documents, showing 5 documents:
+
+            Text Types Tokens Sentences sentiment   id1   id2
+ cv000_29416.txt   354    841         9       neg cv000 29416
+ cv001_19502.txt   156    278         1       neg cv001 19502
+ cv002_17424.txt   276    553         3       neg cv002 17424
+ cv003_12683.txt   313    555         2       neg cv003 12683
+ cv004_12641.txt   380    841         2       neg cv004 12641</code></pre>
+</div>
+</div>
+<p>The variable “Sentiment” indicates whether a movie review was classified as positive or negative. In this example we use 1500 reviews as the training set and build a Naive Bayes classifier based on this subset. In a second step, we predict the sentiment for the remaining reviews (our test set).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">300</span>)</span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>id_train <span class="ot">=</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2000</span>, <span class="dv">1500</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(id_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  590  874 1602  985 1692  789</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create docvar with id</span></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>movie_review<span class="sc">$</span>id_num <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ndoc</span>(movie_review)</span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a><span class="co"># tokenize texts</span></span>
+<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a>movie_review_tokens <span class="ot">=</span> <span class="fu">tokens</span>(movie_review,</span>
+<span id="cb113-6"><a href="#cb113-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">remove_punct =</span> T,</span>
+<span id="cb113-7"><a href="#cb113-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">remove_numbers =</span> T) <span class="sc">%&gt;%</span> </span>
+<span id="cb113-8"><a href="#cb113-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_remove</span>(<span class="fu">stopwords</span>(<span class="st">"en"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb113-9"><a href="#cb113-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_wordstem</span>()</span>
+<span id="cb113-10"><a href="#cb113-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-11"><a href="#cb113-11" aria-hidden="true" tabindex="-1"></a><span class="co"># movie review dfm</span></span>
+<span id="cb113-12"><a href="#cb113-12" aria-hidden="true" tabindex="-1"></a>movie_review_dfm <span class="ot">=</span> <span class="fu">dfm</span>(movie_review_tokens)</span>
+<span id="cb113-13"><a href="#cb113-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-14"><a href="#cb113-14" aria-hidden="true" tabindex="-1"></a><span class="co"># TRAINING SET</span></span>
+<span id="cb113-15"><a href="#cb113-15" aria-hidden="true" tabindex="-1"></a>movie_training <span class="ot">=</span> <span class="fu">dfm_subset</span>(movie_review_dfm, id_num <span class="sc">%in%</span> id_train)</span>
+<span id="cb113-16"><a href="#cb113-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-17"><a href="#cb113-17" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TEST</span><span class="co"> SET </span></span>
+<span id="cb113-18"><a href="#cb113-18" aria-hidden="true" tabindex="-1"></a>movie_test <span class="ot">=</span> <span class="fu">dfm_subset</span>(movie_review_dfm, <span class="sc">!</span>id_num <span class="sc">%in%</span> id_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Naive Bayes</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>movie_naiveBayes <span class="ot">=</span> <span class="fu">textmodel_nb</span>(movie_training, movie_training<span class="sc">$</span>sentiment)</span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(movie_naiveBayes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+textmodel_nb.dfm(x = movie_training, y = movie_training$sentiment)
+
+Class Priors:
+(showing first 2 elements)
+neg pos 
+0.5 0.5 
+
+Estimated Feature Scores:
+        plot      two      teen     coupl       go    church     parti
+neg 0.002579 0.002318 0.0002870 0.0007157 0.002663 8.719e-05 0.0002652
+pos 0.001507 0.002338 0.0001656 0.0005456 0.002348 8.768e-05 0.0002728
+        drink     drive      get     accid      one       guy       die
+neg 1.199e-04 0.0003052 0.004486 9.445e-05 0.007389 0.0014458 0.0005485
+pos 9.417e-05 0.0002630 0.003783 1.851e-04 0.007355 0.0009937 0.0005488
+    girlfriend   continu      see     life  nightmar      deal    watch
+neg  0.0003124 0.0003161 0.002557 0.001435 0.0001199 0.0004323 0.001642
+pos  0.0002338 0.0003215 0.003020 0.002497 0.0001202 0.0005196 0.001539
+        movi     sorta     find   critiqu mind-fuck   generat     touch
+neg 0.010117 1.090e-05 0.001453 9.445e-05 3.633e-06 0.0002652 0.0002289
+pos 0.007657 1.624e-05 0.001630 8.443e-05 3.247e-06 0.0002923 0.0004449
+         cool      idea
+neg 0.0003052 0.0008210
+pos 0.0002273 0.0005845</code></pre>
+</div>
+</div>
+<p>Naive Bayes can only take features into consideration that occur both in the training set and the test set, but we can make the features identical using dfm_match()</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>movie_dfm_match <span class="ot">=</span> <span class="fu">dfm_match</span>(movie_test, <span class="at">features =</span> <span class="fu">featnames</span>(movie_training))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>inspect the classification model</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>movie_actual_class <span class="ot">=</span> movie_dfm_match<span class="sc">$</span>sentiment</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>movie_predicted_class <span class="ot">=</span> <span class="fu">predict</span>( movie_naiveBayes, <span class="at">newdata =</span> movie_dfm_match )</span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a>movie_class_matrix <span class="ot">=</span> <span class="fu">table</span>( movie_actual_class, movie_predicted_class)</span>
+<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a>movie_class_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  movie_predicted_class
+movie_actual_class neg pos
+               neg 213  45
+               pos  37 205</code></pre>
+</div>
+</div>
+<p>From the cross-table we see that the number of false positives and false negatives is similar. The classifier made mistakes in both directions, but does not seem to over- or underestimate one class.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(</span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>  movie_class_matrix,</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode=</span> <span class="st">"everything"</span>,</span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">positive=</span> <span class="st">"pos"</span></span>
+<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+                  movie_predicted_class
+movie_actual_class neg pos
+               neg 213  45
+               pos  37 205
+                                          
+               Accuracy : 0.836           
+                 95% CI : (0.8006, 0.8674)
+    No Information Rate : 0.5             
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
+                                          
+                  Kappa : 0.672           
+                                          
+ Mcnemar's Test P-Value : 0.4395          
+                                          
+            Sensitivity : 0.8200          
+            Specificity : 0.8520          
+         Pos Pred Value : 0.8471          
+         Neg Pred Value : 0.8256          
+              Precision : 0.8471          
+                 Recall : 0.8200          
+                     F1 : 0.8333          
+             Prevalence : 0.5000          
+         Detection Rate : 0.4100          
+   Detection Prevalence : 0.4840          
+      Balanced Accuracy : 0.8360          
+                                          
+       'Positive' Class : pos             
+                                          </code></pre>
+</div>
+</div>
+<hr>
+<p>End of Quanteda section</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./preface.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./TidyText.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">TidyText</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
